@@ -19,8 +19,8 @@ const useThemeStore = create<ThemeState>()(
   persist(
     (set, get) => ({
       theme: THEME_CONFIG.defaultTheme,
-      colorTheme: "coral",
-      customColor: "#3b82f6",
+  colorTheme: "mono",
+  customColor: "#111111",
 
       setTheme: (theme) => {
         set({ theme });
@@ -58,6 +58,7 @@ const useThemeStore = create<ThemeState>()(
 );
 
 export const COLOR_THEMES: Record<string, string> = {
+  mono: "#111111",
   coral: "#e54d5e",
   blue: "#3b82f6",
   red: "#ef4444",
@@ -89,7 +90,7 @@ function applyColorTheme(colorTheme: string, customColor: string) {
   const baseColor =
     colorTheme === "custom"
       ? normalizeHexColor(customColor)
-      : COLOR_THEMES[colorTheme] || COLOR_THEMES.coral;
+       : COLOR_THEMES[colorTheme] || COLOR_THEMES.mono;
   const hoverColor = shadeHexColor(baseColor, -0.14);
 
   root.style.setProperty("--color-primary", baseColor);
@@ -100,7 +101,7 @@ function normalizeHexColor(color: string) {
   const value = (color || "").trim();
   const hex = value.startsWith("#") ? value : `#${value}`;
   const valid = /^#([0-9a-fA-F]{6})$/.test(hex);
-  return valid ? hex.toLowerCase() : "#3b82f6";
+  return valid ? hex.toLowerCase() : "#111111";
 }
 
 function shadeHexColor(hex: string, percent: number) {

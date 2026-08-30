@@ -49,6 +49,13 @@ if (fs.existsSync(rootAppDir) && fs.statSync(rootAppDir).isDirectory()) {
 const mode = process.argv[2] === "start" ? "start" : "dev";
 const dev = mode === "dev";
 
+if (dev) {
+  process.env.NODE_ENV = "development";
+  process.env.PORT ||= process.env.OMNIROUTE_DEV_PORT || "21128";
+  process.env.DASHBOARD_PORT ||= process.env.PORT;
+  process.env.HOST ||= "127.0.0.1";
+}
+
 // Self-heal a stale better-sqlite3 native binary after a Node version switch
 // (nvm 22 <-> 24) before bootstrap touches the DB. No-op when the ABI matches.
 if (dev) {

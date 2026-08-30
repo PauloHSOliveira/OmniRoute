@@ -28,125 +28,116 @@
   --fd-sidebar-width: 220px;
 }
 
-/* OpenClaw × ClawHub Color Palette */
+/* OmniRoute monochrome design system */
 :root {
   --desktop-safe-top: 0px;
   --desktop-safe-bottom: 0px;
   color-scheme: light;
 
-  /* Primary - Coral Red (OpenClaw) */
-  --color-primary: #e54d5e;
-  --color-primary-hover: #c93d4e;
+  --color-primary: #111111;
+  --color-primary-hover: #333333;
+  --color-accent: #111111;
+  --color-accent-hover: #333333;
+  --color-accent-light: #555555;
 
-  /* Accent - Indigo/Violet (buttons, links, gradients) */
-  --color-accent: #6366f1;
-  --color-accent-hover: #8b5cf6;
-  --color-accent-light: #a855f7;
+  --color-error: #b42318;
+  --color-success: #18794e;
+  --color-warning: #9a6700;
 
-  /* Semantic */
-  --color-error: #ef4444;
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
+  --color-traffic-red: #b42318;
+  --color-traffic-yellow: #9a6700;
+  --color-traffic-green: #18794e;
 
-  /* Traffic lights */
-  --color-traffic-red: #ff5f56;
-  --color-traffic-yellow: #ffbd2e;
-  --color-traffic-green: #27c93f;
-
-  /* Light theme */
-  --color-bg: #f9f9fb;
-  --color-bg-alt: #f0f0f5;
-  --color-bg-primary: #f9f9fb;
-  --color-bg-subtle: #f0f0f5;
+  --color-bg: #f7f7f5;
+  --color-bg-alt: #efefec;
+  --color-bg-primary: #f7f7f5;
+  --color-bg-subtle: #efefec;
   --color-surface: #ffffff;
   --color-card: #ffffff;
-  --color-sidebar: #f5f5fa;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-text-main: #1a1a2e;
-  --color-text-primary: #1a1a2e;
-  --color-text-muted: #71717a;
+  --color-sidebar: #f1f1ee;
+  --color-border: rgba(17, 17, 17, 0.14);
+  --color-text-main: #111111;
+  --color-text-primary: #111111;
+  --color-text-muted: #686862;
 
-  /* Fumadocs light theme */
-  --color-fd-background: #f9f9fb;
-  --color-fd-foreground: #1a1a2e;
-  --color-fd-muted: #f0f0f5;
-  --color-fd-muted-foreground: #71717a;
+  --color-fd-background: #f7f7f5;
+  --color-fd-foreground: #111111;
+  --color-fd-muted: #efefec;
+  --color-fd-muted-foreground: #686862;
   --color-fd-popover: #ffffff;
-  --color-fd-popover-foreground: #1a1a2e;
+  --color-fd-popover-foreground: #111111;
   --color-fd-card: #ffffff;
-  --color-fd-card-foreground: #1a1a2e;
-  --color-fd-border: rgba(0, 0, 0, 0.08);
-  --color-fd-primary: #e54d5e;
+  --color-fd-card-foreground: #111111;
+  --color-fd-border: rgba(17, 17, 17, 0.14);
+  --color-fd-primary: #111111;
   --color-fd-primary-foreground: #ffffff;
-  --color-fd-secondary: #f0f0f5;
-  --color-fd-secondary-foreground: #1a1a2e;
-  --color-fd-accent: rgba(229, 77, 94, 0.08);
-  --color-fd-accent-foreground: #1a1a2e;
-  --color-fd-ring: #e54d5e;
+  --color-fd-secondary: #efefec;
+  --color-fd-secondary-foreground: #111111;
+  --color-fd-accent: rgba(17, 17, 17, 0.07);
+  --color-fd-accent-foreground: #111111;
+  --color-fd-ring: #111111;
 
   /* Shadows */
-  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.02), 0 4px 12px rgba(0, 0, 0, 0.015);
-  --shadow-warm: 0 2px 12px -2px rgba(229, 77, 94, 0.12);
-  --shadow-elevated: 0 12px 28px -4px rgba(20, 20, 40, 0.06);
+  --shadow-soft: 0 1px 2px rgba(17, 17, 17, 0.04), 0 6px 18px rgba(17, 17, 17, 0.04);
+  --shadow-warm: 0 2px 12px -2px rgba(17, 17, 17, 0.1);
+  --shadow-elevated: 0 14px 30px -8px rgba(17, 17, 17, 0.14);
 
   /* Graph-paper wallpaper grid — shared visual identity with the marketing site
      (_mono_repo/omnirouteSite/css). Light theme values. Rendered by body::before.
      Opacity tuned up from the site's 0.045 so the wallpaper is actually visible on
      the dense dashboard (cards/chrome cover most of the viewport). */
-  --grid-line: rgba(0, 0, 0, 0.07);
-  --grid-size: 32px;
-  --section-alt: rgba(0, 0, 0, 0.022);
+  --grid-line: rgba(17, 17, 17, 0.045);
+  --grid-size: 40px;
+  --section-alt: rgba(17, 17, 17, 0.018);
 
   /* Identity tokens mirrored from the site. Definitions only in this phase —
      components are repointed to them in a later phase. */
-  --surface-2: #f5f5fa;
-  --radius: 14px;
-  --radius-control: 9px;
-  --grad-brand: linear-gradient(135deg, var(--color-primary), var(--color-accent-light));
+  --surface-2: #f1f1ee;
+  --radius: 10px;
+  --radius-control: 7px;
+  --grad-brand: linear-gradient(135deg, #111111, #454545);
 
   /* Data-table surfaces — theme-aware. The DARK values (in .dark below) exactly mirror
      the previous hardcoded rgba in DataTable.tsx so dark stays byte-identical; these
      light values are the fix (the old code was always-dark via dead var fallbacks). */
-  --table-header-bg: rgba(249, 249, 251, 0.95);
-  --table-row-zebra: rgba(0, 0, 0, 0.02);
-  --table-row-hover: rgba(0, 0, 0, 0.04);
-  --table-cell-border: rgba(0, 0, 0, 0.04);
-  /* Selected row — an accent tint that reads on both themes (inherited by .dark). */
-  --table-row-selected: rgba(99, 102, 241, 0.1);
+  --table-header-bg: rgba(247, 247, 245, 0.96);
+  --table-row-zebra: rgba(17, 17, 17, 0.018);
+  --table-row-hover: rgba(17, 17, 17, 0.045);
+  --table-cell-border: rgba(17, 17, 17, 0.07);
+  --table-row-selected: rgba(17, 17, 17, 0.09);
 }
 
 .dark {
-  /* Dark theme (ClawHub deep) */
   color-scheme: dark;
-  --color-bg: #0b0e14;
-  --color-bg-alt: #111520;
-  --color-bg-primary: #0b0e14;
-  --color-bg-subtle: #111520;
-  --color-surface: #161b22;
-  --color-card: #161b22;
-  --color-sidebar: #10141e;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-text-main: #e6e6ef;
-  --color-text-primary: #e6e6ef;
-  --color-text-muted: #a1a1aa;
+  --color-bg: #111111;
+  --color-bg-alt: #191919;
+  --color-bg-primary: #111111;
+  --color-bg-subtle: #191919;
+  --color-surface: #202020;
+  --color-card: #202020;
+  --color-sidebar: #181818;
+  --color-border: rgba(255, 255, 255, 0.14);
+  --color-text-main: #f5f5f2;
+  --color-text-primary: #f5f5f2;
+  --color-text-muted: #b0b0a8;
 
   /* Fumadocs theme mapping */
-  --color-fd-background: #0b0e14;
-  --color-fd-foreground: #e6e6ef;
-  --color-fd-muted: #111520;
-  --color-fd-muted-foreground: #a1a1aa;
-  --color-fd-popover: #161b22;
-  --color-fd-popover-foreground: #e6e6ef;
-  --color-fd-card: #161b22;
-  --color-fd-card-foreground: #e6e6ef;
-  --color-fd-border: rgba(255, 255, 255, 0.08);
-  --color-fd-primary: #e54d5e;
-  --color-fd-primary-foreground: #ffffff;
-  --color-fd-secondary: #111520;
-  --color-fd-secondary-foreground: #e6e6ef;
-  --color-fd-accent: rgba(229, 77, 94, 0.12);
-  --color-fd-accent-foreground: #e6e6ef;
-  --color-fd-ring: #e54d5e;
+  --color-fd-background: #111111;
+  --color-fd-foreground: #f5f5f2;
+  --color-fd-muted: #191919;
+  --color-fd-muted-foreground: #b0b0a8;
+  --color-fd-popover: #202020;
+  --color-fd-popover-foreground: #f5f5f2;
+  --color-fd-card: #202020;
+  --color-fd-card-foreground: #f5f5f2;
+  --color-fd-border: rgba(255, 255, 255, 0.14);
+  --color-fd-primary: #f5f5f2;
+  --color-fd-primary-foreground: #111111;
+  --color-fd-secondary: #191919;
+  --color-fd-secondary-foreground: #f5f5f2;
+  --color-fd-accent: rgba(255, 255, 255, 0.1);
+  --color-fd-accent-foreground: #f5f5f2;
+  --color-fd-ring: #f5f5f2;
 
   /* Dark shadows */
   --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -156,7 +147,7 @@
   /* Graph-paper wallpaper grid — dark theme values (tuned up from 0.035 for visibility). */
   --grid-line: rgba(255, 255, 255, 0.06);
   --section-alt: rgba(255, 255, 255, 0.018);
-  --surface-2: #1c2230;
+  --surface-2: #282828;
 
   /* Data-table surfaces — dark = the exact old hardcoded values (byte-identical). */
   --table-header-bg: rgba(15, 15, 25, 0.95);
@@ -211,11 +202,8 @@
   --shadow-warm: var(--shadow-warm);
   --shadow-elevated: var(--shadow-elevated);
 
-  /* Font - macOS system fonts */
-  --font-sans:
-    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
-  /* Monospace stack (parity with the site) — code blocks, IDs, endpoints, terminals */
-  --font-mono: ui-monospace, "JetBrains Mono", "Fira Code", "SF Mono", monospace;
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "Cascadia Code", monospace;
 
   /* Nested surface (enables bg-surface-2) */
   --color-surface-2: var(--surface-2);
@@ -283,8 +271,8 @@ body.electron-macos {
 /* Selection — with fallback for browsers that don't support color-mix() */
 ::selection {
   background-color: rgba(229, 77, 94, 0.22);
-  background-color: color-mix(in srgb, var(--color-primary) 22%, transparent);
-  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 14%, transparent);
+  color: var(--color-text-main);
 }
 
 /* Global custom scrollbar — thin, minimal, theme-aware */
@@ -337,12 +325,12 @@ body.electron-macos {
 
 /* Hero gradient */
 .bg-hero-gradient {
-  background: linear-gradient(180deg, #f0f0f5 0%, #f9f9fb 100%);
+  background: linear-gradient(180deg, #efefec 0%, #f7f7f5 100%);
 }
 
-.dark .bg-hero-gradient {
-  background: linear-gradient(180deg, #111520 0%, #0b0e14 100%);
-}
+ .dark .bg-hero-gradient {
+   background: linear-gradient(180deg, #191919 0%, #111111 100%);
+ }
 
 /* Material Symbols */
 :where(.material-symbols-outlined) {
@@ -746,7 +734,7 @@ html[dir="rtl"] .border-l-2 {
   --rtl-bw: 2px;
 }
 html[dir="rtl"] .border-l-4 {
-  --rtl-bw: 4px;
+  --rtl-bw: 1px;
 }
 html[dir="rtl"] .border-l-\[3px\] {
   --rtl-bw: 3px;
