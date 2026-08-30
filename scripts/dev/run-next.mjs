@@ -50,10 +50,14 @@ const mode = process.argv[2] === "start" ? "start" : "dev";
 const dev = mode === "dev";
 
 if (dev) {
+  const devPort = process.env.OMNIROUTE_DEV_PORT || "21128";
   process.env.NODE_ENV = "development";
-  process.env.PORT ||= process.env.OMNIROUTE_DEV_PORT || "21128";
-  process.env.DASHBOARD_PORT ||= process.env.PORT;
-  process.env.HOST ||= "127.0.0.1";
+  process.env.PORT = devPort;
+  process.env.DASHBOARD_PORT = devPort;
+  process.env.API_PORT = process.env.OMNIROUTE_DEV_API_PORT || "21129";
+  process.env.EMBED_WS_PROXY_PORT = process.env.OMNIROUTE_DEV_EMBED_WS_PORT || "21131";
+  process.env.LIVE_WS_PORT = process.env.OMNIROUTE_DEV_LIVE_WS_PORT || "21132";
+  process.env.HOST = "127.0.0.1";
 }
 
 // Self-heal a stale better-sqlite3 native binary after a Node version switch
@@ -63,7 +67,10 @@ if (dev) {
 }
 
 const bootstrappedEnv = bootstrapEnv();
-const runtimePorts = resolveRuntimePorts(bootstrappedEnv);
+const devPort = process.env.OMNIROUTE_DEV_PORT || "21128";
+const runtimePorts = resolveRuntimePorts(
+  dev ? { ...bootstrappedEnv, PORT: devPort, DASHBOARD_PORT: devPort } : bootstrappedEnv
+);
 const mergedEnv = withRuntimePortEnv(bootstrappedEnv, runtimePorts);
 
 for (const [key, value] of Object.entries(mergedEnv)) {

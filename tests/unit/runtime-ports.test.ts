@@ -77,6 +77,7 @@ describe("resolveRuntimePorts", () => {
   it("uses the explicit development port override", () => {
     process.env.NODE_ENV = "development";
     process.env.OMNIROUTE_DEV_PORT = "22128";
+    delete process.env.PORT;
     const ports = resolveRuntimePorts();
     assert.equal(ports.basePort, 22128);
     assert.equal(ports.apiPort, 22128);
