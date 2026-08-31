@@ -82,14 +82,6 @@
   --shadow-warm: 0 2px 12px -2px rgba(17, 17, 17, 0.1);
   --shadow-elevated: 0 14px 30px -8px rgba(17, 17, 17, 0.14);
 
-  /* Graph-paper wallpaper grid — shared visual identity with the marketing site
-     (_mono_repo/omnirouteSite/css). Light theme values. Rendered by body::before.
-     Opacity tuned up from the site's 0.045 so the wallpaper is actually visible on
-     the dense dashboard (cards/chrome cover most of the viewport). */
-  --grid-line: rgba(17, 17, 17, 0.045);
-  --grid-size: 40px;
-  --section-alt: rgba(17, 17, 17, 0.018);
-
   /* Identity tokens mirrored from the site. Definitions only in this phase —
      components are repointed to them in a later phase. */
   --surface-2: #f1f1ee;
@@ -144,9 +136,6 @@
   --shadow-warm: 0 2px 12px -2px rgba(229, 77, 94, 0.15);
   --shadow-elevated: 0 12px 28px -4px rgba(0, 0, 0, 0.3);
 
-  /* Graph-paper wallpaper grid — dark theme values (tuned up from 0.035 for visibility). */
-  --grid-line: rgba(255, 255, 255, 0.06);
-  --section-alt: rgba(255, 255, 255, 0.018);
   --surface-2: #282828;
 
   /* Data-table surfaces — dark = the exact old hardcoded values (byte-identical). */
@@ -247,22 +236,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Graph-paper wallpaper grid — one fixed, full-viewport layer behind every screen
-   (dashboard, auth, error pages). A z-index:-1 ::before paints above body's own
-   background but below all in-flow content, so it shows through any transparent
-   wrapper without lowering text contrast. Mirrors the marketing site exactly. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size);
-}
-
 body.electron-macos {
   --desktop-safe-top: 30px;
   --desktop-safe-bottom: 8px;
@@ -328,9 +301,9 @@ body.electron-macos {
   background: linear-gradient(180deg, #efefec 0%, #f7f7f5 100%);
 }
 
- .dark .bg-hero-gradient {
-   background: linear-gradient(180deg, #191919 0%, #111111 100%);
- }
+.dark .bg-hero-gradient {
+  background: linear-gradient(180deg, #191919 0%, #111111 100%);
+}
 
 /* Material Symbols */
 :where(.material-symbols-outlined) {
