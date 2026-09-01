@@ -816,22 +816,9 @@
       "count": 1
     }
   },
-  "open-sse/vendor/codex-chatgpt-web/adapters/chatgpt-web/browser-worker.ts": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "open-sse/vendor/codex-chatgpt-web/adapters/chatgpt-web/environment.ts": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
   "src/app/(dashboard)/dashboard/HomePageClient.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 2
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
     }
   },
   "src/app/(dashboard)/dashboard/a2a/page.tsx": {
@@ -861,9 +848,6 @@
   },
   "src/app/(dashboard)/dashboard/cli-code/components/AntigravityToolCard.tsx": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
       "count": 1
     }
   },
@@ -929,11 +913,6 @@
   },
   "src/app/(dashboard)/dashboard/onboarding/page.tsx": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "src/app/(dashboard)/dashboard/playground/components/tabs/ApiTab.tsx": {
-    "react-hooks/exhaustive-deps": {
       "count": 1
     }
   },
@@ -1087,11 +1066,6 @@
       "count": 1
     }
   },
-  "src/app/(dashboard)/dashboard/settings/components/ProviderAccountRoutingCard.tsx": {
-    "react-hooks/exhaustive-deps": {
-      "count": 1
-    }
-  },
   "src/app/(dashboard)/dashboard/settings/components/ProxyRegistryManager.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 3
@@ -1104,11 +1078,6 @@
   },
   "src/app/(dashboard)/dashboard/settings/components/RoutingTab.tsx": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "src/app/(dashboard)/dashboard/settings/components/SessionInfoCard.tsx": {
-    "react-hooks/exhaustive-deps": {
       "count": 1
     }
   },
@@ -1478,9 +1447,6 @@
   "src/hooks/useLiveDashboard.ts": {
     "@typescript-eslint/no-unused-vars": {
       "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 2
     }
   },
   "src/lib/a2a/skills/healthReport.ts": {
@@ -1808,7 +1774,7 @@
   },
   "src/lib/plugins/manager.ts": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 2
+      "count": 1
     }
   },
   "src/lib/providers/validation.ts": {
@@ -2014,11 +1980,6 @@
       "count": 1
     }
   },
-  "src/shared/components/ProxyConfigModal.tsx": {
-    "react-hooks/exhaustive-deps": {
-      "count": 1
-    }
-  },
   "src/shared/components/ProxyLogDetail.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 1
@@ -2027,9 +1988,6 @@
   "src/shared/components/RequestLoggerV2.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 3
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 6
     }
   },
   "src/shared/components/RequestTimeline.tsx": {
@@ -2893,11 +2851,6 @@
       "count": 1
     }
   },
-  "tests/unit/call-log-cap.test.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 43
-    }
-  },
   "tests/unit/call-log-startup.test.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -3176,7 +3129,7 @@
   },
   "tests/unit/cli-nodes-commands.test.ts": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 19
+      "count": 15
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 2
@@ -4186,6 +4139,11 @@
   },
   "tests/unit/image-generation-route.test.ts": {
     "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/unit/injection-guard-nonchat-route-logging.test.ts": {
+    "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
@@ -5507,8 +5465,31 @@
       "count": 1
     }
   },
+  "tests/unit/ui/use-improve-prompt.test.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "tests/unit/ui/use-presets.test.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
   "tests/unit/ui/use-stream-metrics.test.tsx": {
     "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "tests/unit/ui/use-structured-output.test.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "tests/unit/ui/use-tools-builder.test.tsx": {
+    "react-hooks/immutability": {
       "count": 1
     }
   },

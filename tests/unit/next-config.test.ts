@@ -106,6 +106,13 @@ test("next config declares Turbopack aliases, runtime assets and server external
     tracingIncludes.includes("./node_modules/sql.js/dist/sql-wasm.wasm"),
     "sql-wasm.wasm must be trace-included so the sql.js fallback works in standalone builds"
   );
+  // tiktoken (codex-chatgpt-web token accounting) reads tiktoken_bg.wasm from
+  // __dirname at module load; without explicit tracing the standalone bundle
+  // throws "Missing tiktoken_bg.wasm" on the first codex token estimate.
+  assert.ok(
+    tracingIncludes.includes("./node_modules/tiktoken/tiktoken_bg.wasm"),
+    "tiktoken_bg.wasm must be trace-included so the codex-chatgpt-web tokenizer works in standalone builds"
+  );
   assert.ok(
     tracingExcludes.some((p) => p.includes("_tasks")),
     "outputFileTracingExcludes should exclude _tasks"
@@ -127,6 +134,9 @@ test("next config declares Turbopack aliases, runtime assets and server external
     "sqlite-vec",
     "node-machine-id",
     "wreq-js",
+    // tiktoken resolves tiktoken_bg.wasm via __dirname-relative fs.readFileSync;
+    // bundling rewrites __dirname to the chunk dir so the wasm lookup misses.
+    "tiktoken",
     "fs",
     "path",
     "child_process",
@@ -257,8 +267,14 @@ test("manager.stub.ts exports every name statically imported from @/mitm/manager
 
 test("next-intl webpack hook preserves caller config and filters known extractor warnings", async () => {
   const { default: nextConfig } = await loadNextConfig("webpack-pass-through");
+  const infrastructureWarnings: unknown[][] = [];
+  const infrastructureConsole = Object.create(console) as Console;
+  infrastructureConsole.warn = (...args: unknown[]) => {
+    infrastructureWarnings.push(args);
+  };
   const config: any = {
     context: process.cwd(),
+    infrastructureLogging: { console: infrastructureConsole },
     plugins: [],
     externals: [],
     ignoreWarnings: [],
@@ -313,6 +329,22 @@ test("next-intl webpack hook preserves caller config and filters known extractor
     config.ignoreWarnings[0]({ message: "Critical dependency: request is expression" }),
     false
   );
+  config.infrastructureLogging.console.warn(
+    "[webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Parsing of " +
+      "/repo/node_modules/fumadocs-mdx/dist/load-from-file-test.js for build dependencies " +
+      "failed at 'import(url.href)'.\nBuild dependencies behind this expression are ignored " +
+      "and might cause incorrect cache invalidation."
+  );
+  config.infrastructureLogging.console.warn(
+    "[webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Parsing of " +
+      "/repo/node_modules/next-intl/dist/esm/production/extractor/format/index.js for build " +
+      "dependencies failed at 'import(t)'.\nBuild dependencies behind this expression are ignored " +
+      "and might cause incorrect cache invalidation."
+  );
+  assert.deepEqual(infrastructureWarnings, []);
+
+  config.infrastructureLogging.console.warn("unrelated infrastructure warning");
+  assert.deepEqual(infrastructureWarnings, [["unrelated infrastructure warning"]]);
 });
 
 test("turbopack.ignoreIssue suppresses the agentSkills over-bundling warning (#6582)", async () => {
