@@ -288,6 +288,12 @@ const nextConfig = {
       // (better-sqlite3 → node:sqlite → sql.js). Next traces sql-wasm.js but can
       // omit the runtime sql-wasm.wasm asset from the standalone bundle.
       "./node_modules/sql.js/dist/sql-wasm.wasm",
+      // tiktoken (codex-chatgpt-web token accounting) loads tiktoken_bg.wasm at
+      // module load via fs.readFileSync(__dirname/…). It must stay EXTERNAL (see
+      // serverExternalPackages) so __dirname is node_modules/tiktoken at runtime,
+      // and the wasm must be explicitly traced or the standalone bundle boots
+      // with "Missing tiktoken_bg.wasm".
+      "./node_modules/tiktoken/tiktoken_bg.wasm",
     ],
   },
   outputFileTracingExcludes: {
@@ -327,6 +333,12 @@ const nextConfig = {
     // analysis can't follow _require.resolve("sql.js/package.json") and spams
     // build warnings.  Externalizing silences them without changing behaviour.
     "sql.js",
+    // tiktoken (codex-chatgpt-web token accounting) resolves tiktoken_bg.wasm at
+    // module load via fs.readFileSync() with __dirname-relative candidates.
+    // Bundling it rewrites __dirname to the output chunk dir, so the wasm lookup
+    // misses; externalizing keeps require("tiktoken") resolving inside
+    // node_modules/tiktoken where the wasm lives (traced via outputFileTracingIncludes).
+    "tiktoken",
     // sqlite-vec ships a native vec0.so loaded at runtime via createRequire().
     // Turbopack otherwise tries to bundle the .so and fails with "Unknown module
     // type"; externalizing it keeps the require at runtime (like better-sqlite3).

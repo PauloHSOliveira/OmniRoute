@@ -106,6 +106,13 @@ test("next config declares Turbopack aliases, runtime assets and server external
     tracingIncludes.includes("./node_modules/sql.js/dist/sql-wasm.wasm"),
     "sql-wasm.wasm must be trace-included so the sql.js fallback works in standalone builds"
   );
+  // tiktoken (codex-chatgpt-web token accounting) reads tiktoken_bg.wasm from
+  // __dirname at module load; without explicit tracing the standalone bundle
+  // throws "Missing tiktoken_bg.wasm" on the first codex token estimate.
+  assert.ok(
+    tracingIncludes.includes("./node_modules/tiktoken/tiktoken_bg.wasm"),
+    "tiktoken_bg.wasm must be trace-included so the codex-chatgpt-web tokenizer works in standalone builds"
+  );
   assert.ok(
     tracingExcludes.some((p) => p.includes("_tasks")),
     "outputFileTracingExcludes should exclude _tasks"
@@ -127,6 +134,9 @@ test("next config declares Turbopack aliases, runtime assets and server external
     "sqlite-vec",
     "node-machine-id",
     "wreq-js",
+    // tiktoken resolves tiktoken_bg.wasm via __dirname-relative fs.readFileSync;
+    // bundling rewrites __dirname to the chunk dir so the wasm lookup misses.
+    "tiktoken",
     "fs",
     "path",
     "child_process",
