@@ -1,4 +1,5 @@
 import { cloneLogPayload } from "@/lib/logPayloads";
+import { toNumber } from "@/shared/utils/numeric";
 import { FORMATS } from "../translator/formats.ts";
 
 type StructuredSSEEvent = {
@@ -56,15 +57,6 @@ function asRecord(value: unknown): JsonRecord {
 
 function toString(value: unknown, fallback = ""): string {
   return typeof value === "string" ? value : fallback;
-}
-
-function toNumber(value: unknown, fallback = 0): number {
-  if (typeof value === "number" && Number.isFinite(value)) return value;
-  if (typeof value === "string" && value.trim().length > 0) {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : fallback;
-  }
-  return fallback;
 }
 
 function normalizeFormat(format?: string | null): string {

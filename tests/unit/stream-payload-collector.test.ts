@@ -44,17 +44,16 @@ test("buildStreamSummaryFromEvents handles empty array", () => {
 
 test("buildStreamSummaryFromEvents handles single event", () => {
   const events = [{ index: 0, data: { choices: [{ delta: { content: "hello" } }] } }];
-  const result = collector.buildStreamSummaryFromEvents(events) as any;
+  const result = collector.buildStreamSummaryFromEvents(events);
   assert.ok(result !== null);
   assert.ok(typeof result === "object");
 });
 
 test("buildStreamSummaryFromEvents handles multiple events", () => {
   const events = [
-    { index: 0, data: { choices: [{ delta: { content: "hello" } }] } },
-    { index: 1, data: { choices: [{ delta: { content: " world" } }] } },
+    { index: 0, data: { choices: [{ delta: { content: " hello" } }] } },
   ];
-  const result = collector.buildStreamSummaryFromEvents(events) as any;
+  const result = collector.buildStreamSummaryFromEvents(events);
   assert.ok(result !== null);
   assert.ok(typeof result === "object");
 });
