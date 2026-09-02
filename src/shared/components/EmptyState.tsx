@@ -50,10 +50,10 @@ export default function EmptyState({
     >
       <div
         style={{
-          fontSize: "48px",
+          fontSize: "44px",
           marginBottom: "16px",
-          opacity: 0.8,
-          animation: "emptyBounce 2s ease-in-out infinite",
+          color: "var(--color-text-muted)",
+          lineHeight: 1,
         }}
         role="img"
         aria-hidden="true"
@@ -68,10 +68,9 @@ export default function EmptyState({
       </div>
       <h3
         style={{
-          fontSize: "18px",
+          fontSize: "16px",
           fontWeight: 600,
-          color: "var(--text-primary, #e0e0e0)",
-          marginBottom: "8px",
+          color: "var(--color-text-main)",
           margin: 0,
         }}
       >
@@ -80,8 +79,8 @@ export default function EmptyState({
       {description && (
         <p
           style={{
-            fontSize: "14px",
-            color: "var(--text-secondary, #888)",
+            fontSize: "13px",
+            color: "var(--color-text-muted)",
             maxWidth: "320px",
             lineHeight: 1.5,
             marginTop: "8px",
@@ -95,34 +94,28 @@ export default function EmptyState({
           onClick={onAction}
           style={{
             marginTop: "20px",
-            padding: "10px 24px",
-            borderRadius: "8px",
-            border: "1px solid rgba(99, 102, 241, 0.4)",
-            background: "rgba(99, 102, 241, 0.15)",
-            color: "#818cf8",
-            fontSize: "14px",
+            padding: "8px 18px",
+            borderRadius: "7px",
+            border: "1px solid var(--color-border)",
+            background: "var(--color-surface)",
+            color: "var(--color-text-main)",
+            fontSize: "13px",
             fontWeight: 500,
             cursor: "pointer",
-            transition: "all 0.2s ease",
+            transition: "background 0.15s ease, border-color 0.15s ease",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.background = "rgba(99, 102, 241, 0.25)";
-            (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+            (e.currentTarget as HTMLElement).style.background = "var(--color-bg-subtle)";
+            (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border-strong)";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.background = "rgba(99, 102, 241, 0.15)";
-            (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+            (e.currentTarget as HTMLElement).style.background = "var(--color-surface)";
+            (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border)";
           }}
         >
           {actionLabel}
         </button>
       )}
-      <style>{`
-        @keyframes emptyBounce {
-          0%, 100% { transform: translateY(0); }
-          50%      { transform: translateY(-8px); }
-        }
-      `}</style>
     </div>
   );
 }

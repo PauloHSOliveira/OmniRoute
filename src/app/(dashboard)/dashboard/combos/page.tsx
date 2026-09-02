@@ -541,17 +541,24 @@ function getStrategyDescription(t, strategy) {
 }
 
 function getStrategyBadgeClass(strategy) {
-  if (strategy === "weighted") return "bg-amber-500/15 text-amber-600 dark:text-amber-400";
-  if (strategy === "round-robin") return "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400";
+  if (strategy === "weighted")
+    return "bg-amber-600/10 text-amber-700 dark:bg-amber-400/10 dark:text-amber-400";
+  if (strategy === "cost-optimized")
+    return "bg-emerald-600/10 text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-400";
   if (strategy === "context-relay")
-    return "bg-fuchsia-500/15 text-fuchsia-600 dark:text-fuchsia-400";
-  if (strategy === "random") return "bg-purple-500/15 text-purple-600 dark:text-purple-400";
-  if (strategy === "least-used") return "bg-cyan-500/15 text-cyan-600 dark:text-cyan-400";
-  if (strategy === "cost-optimized") return "bg-teal-500/15 text-teal-600 dark:text-teal-400";
-  if (strategy === "reset-aware") return "bg-lime-500/15 text-lime-700 dark:text-lime-300";
-  if (strategy === "fill-first") return "bg-orange-500/15 text-orange-600 dark:text-orange-400";
-  if (strategy === "p2c") return "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400";
-  return "bg-blue-500/15 text-blue-600 dark:text-blue-400";
+    return "bg-purple-600/10 text-purple-700 dark:bg-purple-400/10 dark:text-purple-400";
+  if (strategy === "random")
+    return "bg-black/5 text-text-muted dark:bg-white/10 dark:text-text-muted";
+  if (strategy === "least-used")
+    return "bg-black/5 text-text-muted dark:bg-white/10 dark:text-text-muted";
+  if (strategy === "reset-aware")
+    return "bg-black/5 text-text-muted dark:bg-white/10 dark:text-text-muted";
+  if (strategy === "fill-first")
+    return "bg-black/5 text-text-muted dark:bg-white/10 dark:text-text-muted";
+  if (strategy === "round-robin")
+    return "bg-black/5 text-text-muted dark:bg-white/10 dark:text-text-muted";
+  if (strategy === "p2c") return "bg-black/5 text-text-muted dark:bg-white/10 dark:text-text-muted";
+  return "bg-primary/10 text-primary dark:text-primary";
 }
 
 function getI18nOrFallback(t, key, fallback, values = undefined) {

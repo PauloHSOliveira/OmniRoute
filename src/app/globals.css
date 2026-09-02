@@ -34,73 +34,83 @@
   --desktop-safe-bottom: 0px;
   color-scheme: light;
 
-  --color-primary: #111111;
-  --color-primary-hover: #333333;
-  --color-accent: #111111;
-  --color-accent-hover: #333333;
-  --color-accent-light: #555555;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-light: #60a5fa;
 
-  --color-error: #b42318;
-  --color-success: #18794e;
-  --color-warning: #9a6700;
+  --color-error: #dc2626;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
 
-  --color-traffic-red: #b42318;
-  --color-traffic-yellow: #9a6700;
-  --color-traffic-green: #18794e;
+  --color-traffic-red: #dc2626;
+  --color-traffic-yellow: #d97706;
+  --color-traffic-green: #16a34a;
 
-  --color-bg: #f7f7f5;
-  --color-bg-alt: #efefec;
-  --color-bg-primary: #f7f7f5;
-  --color-bg-subtle: #efefec;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f7f7f7;
+  --color-bg-primary: #ffffff;
+  --color-bg-subtle: #f7f7f7;
   --color-surface: #ffffff;
   --color-card: #ffffff;
-  --color-sidebar: #f1f1ee;
-  --color-border: rgba(17, 17, 17, 0.14);
+  --color-sidebar: #ffffff;
+  --color-border: #e5e7eb;
+  --color-border-strong: #d1d5db;
   --color-text-main: #111111;
   --color-text-primary: #111111;
-  --color-text-muted: #686862;
+  --color-text-secondary: #374151;
+  --color-text-muted: #5f6368;
+  --color-text-placeholder: #6b7280;
+  --color-text-disabled: #9ca3af;
+  --color-link: #1d4ed8;
 
-  --color-fd-background: #f7f7f5;
+  --color-fd-background: #ffffff;
   --color-fd-foreground: #111111;
-  --color-fd-muted: #efefec;
-  --color-fd-muted-foreground: #686862;
+  --color-fd-muted: #f7f7f7;
+  --color-fd-muted-foreground: #5f6368;
   --color-fd-popover: #ffffff;
   --color-fd-popover-foreground: #111111;
   --color-fd-card: #ffffff;
   --color-fd-card-foreground: #111111;
-  --color-fd-border: rgba(17, 17, 17, 0.14);
-  --color-fd-primary: #111111;
+  --color-fd-border: #e5e7eb;
+  --color-fd-primary: #2563eb;
   --color-fd-primary-foreground: #ffffff;
-  --color-fd-secondary: #efefec;
+  --color-fd-secondary: #f7f7f7;
   --color-fd-secondary-foreground: #111111;
-  --color-fd-accent: rgba(17, 17, 17, 0.07);
+  --color-fd-accent: rgba(37, 99, 235, 0.08);
   --color-fd-accent-foreground: #111111;
-  --color-fd-ring: #111111;
+  --color-fd-ring: #2563eb;
 
-  /* Shadows */
-  --shadow-soft: 0 1px 2px rgba(17, 17, 17, 0.04), 0 6px 18px rgba(17, 17, 17, 0.04);
-  --shadow-warm: 0 2px 12px -2px rgba(17, 17, 17, 0.1);
-  --shadow-elevated: 0 14px 30px -8px rgba(17, 17, 17, 0.14);
+  /* Shadows — restrained: depth comes from borders and whitespace, not elevation. */
+  --shadow-soft: 0 1px 2px rgba(17, 17, 17, 0.03), 0 2px 8px rgba(17, 17, 17, 0.03);
+  --shadow-warm: 0 1px 3px rgba(17, 17, 17, 0.06);
+  --shadow-elevated: 0 8px 24px -12px rgba(17, 17, 17, 0.12);
 
   /* Identity tokens mirrored from the site. Definitions only in this phase —
      components are repointed to them in a later phase. */
-  --surface-2: #f1f1ee;
+  --surface-2: #f7f7f7;
   --radius: 10px;
   --radius-control: 7px;
-  --grad-brand: linear-gradient(135deg, #111111, #454545);
+  --grad-brand: linear-gradient(135deg, #2563eb, #1d4ed8);
 
   /* Data-table surfaces — theme-aware. The DARK values (in .dark below) exactly mirror
      the previous hardcoded rgba in DataTable.tsx so dark stays byte-identical; these
      light values are the fix (the old code was always-dark via dead var fallbacks). */
-  --table-header-bg: rgba(247, 247, 245, 0.96);
-  --table-row-zebra: rgba(17, 17, 17, 0.018);
-  --table-row-hover: rgba(17, 17, 17, 0.045);
-  --table-cell-border: rgba(17, 17, 17, 0.07);
-  --table-row-selected: rgba(17, 17, 17, 0.09);
+  --table-header-bg: #fafafa;
+  --table-row-zebra: rgba(17, 17, 17, 0.02);
+  --table-row-hover: #f3f4f6;
+  --table-cell-border: #eef1f4;
+  --table-row-selected: rgba(37, 99, 235, 0.08);
 }
 
 .dark {
   color-scheme: dark;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #60a5fa;
+  --color-accent: #3b82f6;
+  --color-accent-hover: #60a5fa;
+  --color-accent-light: #60a5fa;
   --color-bg: #111111;
   --color-bg-alt: #191919;
   --color-bg-primary: #111111;
@@ -109,34 +119,40 @@
   --color-card: #202020;
   --color-sidebar: #181818;
   --color-border: rgba(255, 255, 255, 0.14);
+  --color-border-strong: rgba(255, 255, 255, 0.24);
   --color-text-main: #f5f5f2;
   --color-text-primary: #f5f5f2;
-  --color-text-muted: #b0b0a8;
+  --color-text-secondary: #d1d5db;
+  --color-text-muted: #a3a7ad;
+  --color-text-placeholder: #9ca3af;
+  --color-text-disabled: #6b7280;
+  --color-link: #93c5fd;
 
   /* Fumadocs theme mapping */
   --color-fd-background: #111111;
   --color-fd-foreground: #f5f5f2;
   --color-fd-muted: #191919;
-  --color-fd-muted-foreground: #b0b0a8;
+  --color-fd-muted-foreground: #a3a7ad;
   --color-fd-popover: #202020;
   --color-fd-popover-foreground: #f5f5f2;
   --color-fd-card: #202020;
   --color-fd-card-foreground: #f5f5f2;
   --color-fd-border: rgba(255, 255, 255, 0.14);
-  --color-fd-primary: #f5f5f2;
-  --color-fd-primary-foreground: #111111;
+  --color-fd-primary: #3b82f6;
+  --color-fd-primary-foreground: #ffffff;
   --color-fd-secondary: #191919;
   --color-fd-secondary-foreground: #f5f5f2;
-  --color-fd-accent: rgba(255, 255, 255, 0.1);
+  --color-fd-accent: rgba(59, 130, 246, 0.16);
   --color-fd-accent-foreground: #f5f5f2;
-  --color-fd-ring: #f5f5f2;
+  --color-fd-ring: #3b82f6;
 
   /* Dark shadows */
-  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
-  --shadow-warm: 0 2px 12px -2px rgba(229, 77, 94, 0.15);
-  --shadow-elevated: 0 12px 28px -4px rgba(0, 0, 0, 0.3);
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-warm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 8px 24px -12px rgba(0, 0, 0, 0.5);
 
   --surface-2: #282828;
+  --grad-brand: linear-gradient(135deg, #2563eb, #1d4ed8);
 
   /* Data-table surfaces — dark = the exact old hardcoded values (byte-identical). */
   --table-header-bg: rgba(15, 15, 25, 0.95);
@@ -168,22 +184,27 @@
   --color-card: var(--color-card);
   --color-sidebar: var(--color-sidebar);
   --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
   --color-text-main: var(--color-text-main);
   --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
   --color-text-muted: var(--color-text-muted);
+  --color-text-placeholder: var(--color-text-placeholder);
+  --color-text-disabled: var(--color-text-disabled);
+  --color-link: var(--color-link);
 
   /* Static colors (for explicit light/dark usage) */
-  --color-bg-light: #f9f9fb;
+  --color-bg-light: #ffffff;
   --color-bg-dark: #0b0e14;
   --color-surface-light: #ffffff;
   --color-surface-dark: #161b22;
-  --color-sidebar-light: #ededf2;
+  --color-sidebar-light: #ffffff;
   --color-sidebar-dark: #111520;
-  --color-border-light: #e2e2ea;
+  --color-border-light: #e5e7eb;
   --color-border-dark: #2d333b;
-  --color-text-main-light: #1a1a2e;
+  --color-text-main-light: #111111;
   --color-text-main-dark: #e6e6ef;
-  --color-text-muted-light: #71717a;
+  --color-text-muted-light: #5f6368;
   --color-text-muted-dark: #a1a1aa;
 
   /* Shadows */
@@ -191,7 +212,7 @@
   --shadow-warm: var(--shadow-warm);
   --shadow-elevated: var(--shadow-elevated);
 
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: var(--font-ibm-plex-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "SF Mono", ui-monospace, "Cascadia Code", monospace;
 
   /* Nested surface (enables bg-surface-2) */
@@ -298,7 +319,7 @@ body.electron-macos {
 
 /* Hero gradient */
 .bg-hero-gradient {
-  background: linear-gradient(180deg, #efefec 0%, #f7f7f5 100%);
+  background: linear-gradient(180deg, #f7f7f7 0%, #ffffff 100%);
 }
 
 .dark .bg-hero-gradient {

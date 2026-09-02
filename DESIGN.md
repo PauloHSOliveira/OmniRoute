@@ -2,44 +2,54 @@
 
 ## Point of view
 
-OmniRoute should feel like serious infrastructure, not an AI-themed consumer app. The interface is a quiet control surface for routing, observing, and operating a complex provider network.
+OmniRoute is serious infrastructure software: precise, calm, fast, technical, and trustworthy. The interface is a quiet control surface for routing, observing, and operating a complex provider network — closer to a cloud infrastructure console or a modern SaaS analytics product than an AI-themed app.
 
 ## Visual world
 
-- Minimal, editorial, and monochrome.
-- White and near-black are the dominant materials.
-- Warm off-white backgrounds separate the application from pure white content surfaces.
-- Color is reserved for operational meaning: errors, healthy states, warnings, and occasional provider data visualization.
-- Remove decorative gradients, saturated purple/coral accents, excessive rounded cards, and wallpaper-like visual noise.
-
-## Typography
-
-- Inter is the primary interface typeface for a crisp, neutral, technical voice.
-- Use the system monospace stack for endpoints, IDs, code, and quantitative data.
-- Prefer strong weight contrast and compact labels over oversized display treatments.
+- **White is the canvas, near-black is the ink.** The interface reads white → black → typography → spacing → structure before color is ever perceived.
+- Monochromatic by default. Color is information, never decoration.
+- Flat surfaces: 1px borders and whitespace separate sections instead of shadows, gradients, or floating panels.
+- Restrained 8–10px radii; cards carry no elevation.
+- No glassmorphism, neon, gradients, or 3D illustration on product screens. Illustrations are allowed only in empty states and onboarding, and even there kept quiet.
 
 ## Tokens
 
-- Ink: `#111111`
-- Paper: `#f7f7f5`
-- Surface: `#ffffff`
-- Subtle surface: `#efefec`
-- Muted text: `#686862`
-- Border: `rgba(17, 17, 17, 0.14)`
-- Control radius: `7px`
-- Card radius: `10px`
+- Canvas: `#FFFFFF`
+- Subtle surfaces: `#F7F7F7`, `#FAFAFA`
+- Primary text: `#111111`
+- Secondary text: `#5F6368`
+- Muted text: `#8A8F98`
+- Border: `#E5E7EB`
+- Strong border / selected: `#D1D5DB`
+- Accent: `#2563EB` (active nav, selected controls, links, charts, primary actions, focus)
+- Success: `#16A34A` · Warning: `#D97706` · Danger: `#DC2626`
+- Purple `#7C3AED` only for model/provider distinctions when necessary
+- Control radius: `7px` · Card radius: `10px`
+- Monospace reserved for model/provider IDs, API routes, tokens, request IDs, latency, and diagnostics
+
+## Typography
+
+- IBM Plex Sans (system sans fallback) as the primary interface face. Its slightly humanist, engineered character suits infrastructure software without falling into generic AI-product typography.
+- Page titles 26–28px / 600, section titles 18–20px / 600, card titles 14–16px / 500–600, body 13–14px, metadata 12–13px.
+- Headings are the main hierarchy mechanism; no kickers, no eyebrow labels.
 
 ## Interaction
 
-- Primary actions use solid near-black with white text.
-- Secondary actions use white or subtle paper surfaces with a clear border.
-- Focus remains high-contrast and keyboard-visible.
-- Hover states use tonal shifts and borders before introducing color.
+- Primary actions are solid blue (`#2563EB`) with white text; secondary actions are white with a gray border; destructive actions are red only when destructive.
+- Focus rings are high-contrast and keyboard-visible, blue-ringed.
+- Hover states use tonal shifts and borders before color.
+- Motion is functional only: hover, tab, and disclosure transitions plus loading states. No glowing, pulsing, or ornamental animation.
 
 ## Data visualization
 
-Provider maps and operational charts remain because they communicate product value. Their surrounding chrome should be monochrome; semantic colors should be sparse, legible, and meaning-driven rather than decorative.
+- Charts are mostly neutral with one primary accent: main series → blue, success → green, warning → amber, failure → red. Multi-series categorical palettes lead with blue and stay muted.
+- Provider status reads as subtle dot + label combinations (● Healthy / ● Degraded / ● Offline), never giant colored badges.
+
+## Navigation
+
+- A narrow, clean left sidebar, mostly icon-driven. Active item uses a pale blue background with dark text and a blue icon accent.
+- The content area is white and spacious: page title, optional short description, primary actions aligned right, then tabs/filters, then the data area.
 
 ## Scope
 
-This direction applies to the base web application and dashboard system. Product behavior, content, provider maps, operational data, and native affordances remain unchanged.
+This direction applies to the base web application and dashboard system. Product surfaces (dashboard, providers, routing, settings, logs, analytics) all share the same tokens and primitives.

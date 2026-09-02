@@ -44,102 +44,44 @@ export default function FilterBar({
   const hasActiveFilters = searchValue || Object.values(activeFilters).some((v) => v && v !== "");
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "8px",
-        alignItems: "center",
-        padding: "8px 0",
-      }}
-    >
+    <div className="flex flex-wrap items-center gap-2 py-2">
       {/* Search input */}
-      <div style={{ position: "relative", flex: "1 1 200px", minWidth: "200px" }}>
+      <div className="relative min-w-[200px] flex-1">
+        <span className="material-symbols-outlined pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-text-muted">
+          search
+        </span>
         <input
           type="text"
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder={placeholder || t("search")}
-          style={{
-            width: "100%",
-            padding: "8px 12px 8px 32px",
-            borderRadius: "6px",
-            border: "1px solid rgba(255,255,255,0.1)",
-            background: "rgba(255,255,255,0.05)",
-            color: "var(--text-primary, #e0e0e0)",
-            fontSize: "13px",
-            outline: "none",
-          }}
+          className="h-9 w-full rounded-control border border-border bg-white pl-9 pr-3 text-sm text-text-main outline-none transition-all placeholder:text-text-muted/60 focus:border-accent/60 focus:ring-2 focus:ring-accent/20 dark:bg-white/5"
         />
-        <span
-          style={{
-            position: "absolute",
-            left: "10px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            opacity: 0.4,
-            fontSize: "14px",
-            pointerEvents: "none",
-          }}
-        >
-          🔍
-        </span>
       </div>
 
       {/* Filter chips */}
       {filters.map((filter) => (
-        <div key={filter.key} style={{ position: "relative" }}>
+        <div key={filter.key} className="relative">
           <button
             onClick={() => setExpandedFilter(expandedFilter === filter.key ? null : filter.key)}
-            style={{
-              padding: "6px 12px",
-              borderRadius: "6px",
-              border: `1px solid ${activeFilters[filter.key] ? "rgba(99,102,241,0.5)" : "rgba(255,255,255,0.1)"}`,
-              background: activeFilters[filter.key]
-                ? "rgba(99,102,241,0.15)"
-                : "rgba(255,255,255,0.05)",
-              color: activeFilters[filter.key] ? "#818cf8" : "var(--text-secondary, #888)",
-              fontSize: "12px",
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-            }}
+            className={
+              activeFilters[filter.key]
+                ? "inline-flex h-9 items-center gap-1.5 rounded-control border border-primary/30 bg-primary/10 px-3 text-xs font-medium text-primary transition-colors"
+                : "inline-flex h-9 items-center gap-1.5 rounded-control border border-border bg-white px-3 text-xs font-medium text-text-muted transition-colors hover:border-border-strong hover:text-text-main dark:bg-white/5"
+            }
           >
+            <span className="material-symbols-outlined text-[15px]">filter_list</span>
             {filter.label}
             {activeFilters[filter.key] ? ` · ${activeFilters[filter.key]}` : ""}
           </button>
           {expandedFilter === filter.key && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                marginTop: "4px",
-                background: "rgba(20,20,30,0.95)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "8px",
-                padding: "4px",
-                zIndex: 50,
-                minWidth: "120px",
-                backdropFilter: "blur(12px)",
-              }}
-            >
+            <div className="absolute left-0 top-full z-50 mt-1 min-w-[140px] rounded-md border border-border bg-surface p-1 shadow-soft">
               <button
                 onClick={() => {
                   onFilterChange(filter.key, "");
                   setExpandedFilter(null);
                 }}
-                style={{
-                  display: "block",
-                  width: "100%",
-                  padding: "6px 12px",
-                  textAlign: "left",
-                  background: "none",
-                  border: "none",
-                  color: "#888",
-                  fontSize: "12px",
-                  cursor: "pointer",
-                  borderRadius: "4px",
-                }}
+                className="block w-full rounded px-3 py-1.5 text-left text-xs text-text-muted transition-colors hover:bg-bg-subtle hover:text-text-main"
               >
                 {t("all")}
               </button>
@@ -150,21 +92,11 @@ export default function FilterBar({
                     onFilterChange(filter.key, opt);
                     setExpandedFilter(null);
                   }}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    padding: "6px 12px",
-                    textAlign: "left",
-                    background: activeFilters[filter.key] === opt ? "rgba(99,102,241,0.2)" : "none",
-                    border: "none",
-                    color:
-                      activeFilters[filter.key] === opt
-                        ? "#818cf8"
-                        : "var(--text-primary, #e0e0e0)",
-                    fontSize: "12px",
-                    cursor: "pointer",
-                    borderRadius: "4px",
-                  }}
+                  className={
+                    activeFilters[filter.key] === opt
+                      ? "block w-full rounded px-3 py-1.5 text-left text-xs font-medium text-primary transition-colors hover:bg-bg-subtle"
+                      : "block w-full rounded px-3 py-1.5 text-left text-xs text-text-main transition-colors hover:bg-bg-subtle"
+                  }
                 >
                   {opt}
                 </button>
@@ -178,16 +110,9 @@ export default function FilterBar({
       {hasActiveFilters && (
         <button
           onClick={handleClear}
-          style={{
-            padding: "6px 12px",
-            borderRadius: "6px",
-            border: "1px solid rgba(239,68,68,0.3)",
-            background: "rgba(239,68,68,0.1)",
-            color: "#ef4444",
-            fontSize: "12px",
-            cursor: "pointer",
-          }}
+          className="inline-flex h-9 items-center gap-1.5 rounded-control border border-error/30 bg-error/10 px-3 text-xs font-medium text-error transition-colors hover:bg-error/15"
         >
+          <span className="material-symbols-outlined text-[15px]">close</span>
           {t("clear")}
         </button>
       )}

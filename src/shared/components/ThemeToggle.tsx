@@ -17,20 +17,19 @@ export default function ThemeToggle({
 
   const variants = {
     default: cn(
-      "flex items-center justify-center size-10 rounded-full",
+      "flex items-center justify-center size-9 rounded-md",
       "text-text-muted",
       "hover:bg-black/5",
       "hover:text-text-main",
       "transition-colors"
     ),
     card: cn(
-      "flex items-center justify-center size-11 rounded-full",
+      "flex items-center justify-center size-10 rounded-md",
       "bg-surface/60",
       "hover:bg-surface",
       "border border-border",
       "backdrop-blur-md shadow-sm hover:shadow-md",
-      "text-text-muted-light hover:text-primary",
-      "hover:text-primary",
+      "text-text-muted hover:text-primary",
       "transition-all group"
     ),
   };
