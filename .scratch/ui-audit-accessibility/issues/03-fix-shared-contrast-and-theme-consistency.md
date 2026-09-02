@@ -4,10 +4,10 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Body, secondary, muted, placeholder, link, status, and disabled text meet the appropriate WCAG contrast threshold.
-- [ ] Light and dark themes preserve readable surfaces, borders, controls, and semantic states.
-- [ ] Shared components use design tokens for colors rather than conflicting hardcoded palette values.
-- [ ] Charts and status indicators retain meaningful blue, green, amber, and red distinctions.
-- [ ] Add regression coverage for critical contrast and theme token behavior.
+- [x] Body, secondary, muted, placeholder, link, status, and disabled text meet the appropriate WCAG contrast threshold.
+- [x] Light and dark themes preserve readable surfaces, borders, controls, and semantic states.
+- [x] Shared components use design tokens for colors rather than conflicting hardcoded palette values.
+- [x] Charts and status indicators retain meaningful blue, green, amber, and red distinctions.
+- [x] Add regression coverage for critical contrast and theme token behavior.
