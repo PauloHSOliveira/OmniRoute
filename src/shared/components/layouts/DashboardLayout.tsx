@@ -88,6 +88,7 @@ export default function DashboardLayout({ children }) {
         <div
           className="fixed inset-0 z-40 bg-black/20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
         />
       )}
 
@@ -102,9 +103,12 @@ export default function DashboardLayout({ children }) {
 
       {/* Sidebar - Mobile: full viewport height with proper scroll containment */}
       <div
+        id="mobile-sidebar"
         className={`fixed inset-y-0 start-0 z-50 transform lg:hidden transition-transform duration-300 ease-in-out h-dvh overflow-y-auto ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          sidebarOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
         }`}
+        aria-hidden={!sidebarOpen}
+        inert={!sidebarOpen ? true : undefined}
       >
         <Sidebar onClose={() => setSidebarOpen(false)} isMacElectron={isMacElectron} />
       </div>

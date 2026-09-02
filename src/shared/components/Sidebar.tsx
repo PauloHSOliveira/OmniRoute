@@ -449,16 +449,16 @@ export default function Sidebar({
       "flex items-center gap-3 rounded-lg transition-all group",
       collapsed ? "justify-center px-2 py-2.5" : "px-3 py-1.5",
       active
-        ? "bg-primary text-white shadow-sm"
-        : "text-text-muted hover:bg-surface hover:text-text-main"
+        ? "bg-accent/10 text-text-main"
+        : "text-text-muted hover:bg-bg-subtle hover:text-text-main"
     );
     const iconClassName = cn(
       "material-symbols-outlined text-[18px] shrink-0",
-      active ? "fill-1" : "group-hover:text-text-main transition-colors"
+      active ? "fill-1 text-primary" : "group-hover:text-text-main transition-colors"
     );
     const content = (
       <>
-        <span className={iconClassName} style={getIconStyle(item.id)}>
+        <span className={iconClassName} style={getIconStyle(item.id)} aria-hidden="true">
           {item.icon}
         </span>
         {!collapsed && (
@@ -511,7 +511,7 @@ export default function Sidebar({
       <aside
         ref={sidebarRef}
         className={cn(
-          "flex h-full min-h-0 flex-col border-r border-black/5 bg-sidebar transition-all duration-300 ease-in-out dark:border-white/5",
+          "flex h-full min-h-0 flex-col border-r border-border bg-sidebar transition-all duration-300 ease-in-out",
           collapsed ? "w-16" : "w-[220px]"
         )}
         style={{ paddingTop: isMacElectron ? "var(--desktop-safe-top)" : undefined }}
@@ -626,9 +626,7 @@ export default function Sidebar({
             if (collapsed) {
               return (
                 <div key={section.id}>
-                  {!isFirst && (
-                    <div className="border-t border-black/5 dark:border-white/5 my-1.5" />
-                  )}
+                  {!isFirst && <div className="border-t border-border my-1.5" />}
                   {sectionItems.map(renderNavLink)}
                 </div>
               );
@@ -647,7 +645,7 @@ export default function Sidebar({
             return (
               <div key={section.id} className={isFirst ? "space-y-0.5" : "mt-2"}>
                 <div
-                  className="flex items-center gap-0.5 px-2 py-1 rounded-md hover:bg-surface/30 transition-colors cursor-pointer group/header"
+                  className="flex items-center gap-0.5 px-2 py-1 rounded-md hover:bg-bg-subtle/70 transition-colors cursor-pointer group/header"
                   onClick={() => toggleSection(sectionId)}
                   role="button"
                   aria-expanded={isExpanded}
@@ -701,7 +699,7 @@ export default function Sidebar({
                           <div key={child.id} className={separatorHidden ? "mt-0.5" : "mt-2"}>
                             {!separatorHidden && (
                               <div className="flex items-center gap-1.5 px-2 py-0.5 mb-0.5">
-                                <div className="h-px flex-1 bg-black/8 dark:bg-white/8" />
+                                <div className="h-px flex-1 bg-border" />
                                 <span className="text-[8px] font-semibold text-text-muted/40 uppercase tracking-widest">
                                   {child.title}
                                 </span>
@@ -724,7 +722,7 @@ export default function Sidebar({
 
         <div
           className={cn(
-            "shrink-0 border-t border-black/5 dark:border-white/5",
+            "shrink-0 border-t border-border",
             collapsed ? "p-2 flex flex-col gap-1" : "p-2 flex gap-2"
           )}
           style={{
