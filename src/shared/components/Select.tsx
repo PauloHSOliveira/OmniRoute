@@ -70,7 +70,7 @@ export default function Select({
             "w-full py-2 px-3 pe-10 text-sm text-text-main",
             "bg-surface border border-border rounded-control appearance-none",
             "focus:ring-2 focus:ring-accent/20 focus:border-accent/60 focus:outline-none",
-            "transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+            "transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
             "text-[16px] sm:text-sm",
             error ? "border-red-600 focus:border-red-600 focus:ring-red-600/20" : "",
             selectClassName

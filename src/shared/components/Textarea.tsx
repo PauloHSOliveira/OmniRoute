@@ -18,7 +18,7 @@ export default function Textarea({ className, error = false, ...props }: Textare
         "bg-white dark:bg-white/5 border border-border rounded-control",
         "placeholder:text-text-muted/60",
         "focus:ring-2 focus:ring-accent/20 focus:border-accent/60 focus:outline-none",
-        "transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+        "transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
         "text-[16px] sm:text-sm",
         error ? "border-red-600 focus:border-red-600 focus:ring-red-600/20" : "",
         className

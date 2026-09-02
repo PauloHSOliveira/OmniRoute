@@ -34,7 +34,7 @@ export function StatusDot({
     <span className={`relative flex ${sizeClass} shrink-0`}>
       {pulse && (
         <span
-          className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-70"
+          className="absolute inline-flex h-full w-full rounded-full opacity-70 motion-safe:animate-ping"
           style={{ backgroundColor: dotColor }}
         />
       )}

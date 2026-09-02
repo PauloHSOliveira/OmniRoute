@@ -4,10 +4,10 @@
 
 **Blocked by:** 01: Repair shared shell accessibility; 02: Remove nested interactive controls; 03: Fix shared contrast and theme consistency.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Retain purposeful loading, disclosure, navigation, and state-change feedback.
-- [ ] Replace broad or expensive transitions with targeted properties where practical.
-- [ ] Remove decorative motion or effects that do not communicate state.
-- [ ] Respect reduced-motion preferences without hiding important state changes.
-- [ ] Verify key dashboard routes remain responsive during normal interaction.
+- [x] Retain purposeful loading, disclosure, navigation, and state-change feedback.
+- [x] Replace broad or expensive transitions with targeted properties where practical.
+- [x] Remove decorative motion or effects that do not communicate state.
+- [x] Respect reduced-motion preferences without hiding important state changes.
+- [x] Verify key dashboard routes remain responsive during normal interaction.
