@@ -242,6 +242,7 @@ function ModelOverrideTargetList({
     <div className="rounded-lg border border-border/50 overflow-hidden">
       <div className="p-2 border-b border-border/50 bg-bg-subtle/40">
         <input
+          id="model-capability-overrides-search"
           type="text"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
@@ -339,7 +340,11 @@ function ModelOverrideForm({
 
   return (
     <div className="flex flex-col sm:flex-row gap-2">
+      <label htmlFor="model-override-key" className="sr-only">
+        {t("modelOverrideKey")}
+      </label>
       <select
+        id="model-override-key"
         value={key}
         onChange={(event) => setKey(event.target.value as ModelOverrideKey)}
         className="sm:w-40 px-2 py-2 text-xs bg-bg-base border border-border rounded-md focus:outline-none focus:border-primary"
@@ -349,7 +354,11 @@ function ModelOverrideForm({
         <option value="max_output_tokens">max_output_tokens</option>
         <option value="reasoning_efforts">reasoning_efforts</option>
       </select>
+      <label htmlFor="model-override-value" className="sr-only">
+        {t("modelOverrideValuePlaceholder")}
+      </label>
       <input
+        id="model-override-value"
         type={isReasoningEfforts ? "text" : "number"}
         min={isReasoningEfforts ? undefined : "1"}
         step={isReasoningEfforts ? undefined : "1"}

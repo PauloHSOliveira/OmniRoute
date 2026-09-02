@@ -67,6 +67,7 @@ export function ServiceLogsPanel({ name }: ServiceLogsPanelProps) {
         <input
           type="text"
           placeholder={t("filterLogs")}
+          aria-label={t("filterLogs")}
           value={filterInput}
           onChange={(e) => applyFilter(e.target.value)}
           className="flex-1 bg-transparent text-xs outline-none placeholder:text-text-muted min-w-0"

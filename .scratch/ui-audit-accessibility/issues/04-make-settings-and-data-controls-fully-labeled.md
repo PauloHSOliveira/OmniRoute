@@ -4,10 +4,10 @@
 
 **Blocked by:** 01: Repair shared shell accessibility; 03: Fix shared contrast and theme consistency.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Settings forms have programmatically associated labels for every input, select, and interactive control.
-- [ ] Filters and technical controls have accessible names that describe their action or current state.
-- [ ] Validation errors and helper text are associated with the relevant control and announced appropriately.
-- [ ] Existing settings persistence, loading, disabled, and error behavior remains unchanged.
-- [ ] Add regression coverage for the repaired form semantics.
+- [x] Settings forms have programmatically associated labels for every input, select, and interactive control.
+- [x] Filters and technical controls have accessible names that describe their action or current state.
+- [x] Validation errors and helper text are associated with the relevant control and announced appropriately.
+- [x] Existing settings persistence, loading, disabled, and error behavior remains unchanged.
+- [x] Add regression coverage for the repaired form semantics.

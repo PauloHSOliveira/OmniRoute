@@ -248,7 +248,11 @@ export default function PayloadRulesTab() {
               {loading ? tCommon("loading") : t("payloadEditorReady")}
             </div>
           </div>
+          <label htmlFor="payload-rules-editor" className="sr-only">
+            {t("payloadEditorTitle")}
+          </label>
           <textarea
+            id="payload-rules-editor"
             value={editorValue}
             onChange={(event) => {
               setEditorValue(event.target.value);
@@ -257,12 +261,14 @@ export default function PayloadRulesTab() {
             spellCheck={false}
             rows={22}
             className="w-full px-4 py-4 bg-transparent text-sm font-mono leading-6 text-text-main resize-y min-h-[420px] focus:outline-none"
+            aria-invalid={!!parsedEditor.error}
+            aria-describedby={parsedEditor.error ? "payload-rules-editor-error" : undefined}
             disabled={loading || saving}
           />
         </div>
 
         {parsedEditor.error && (
-          <p className="text-sm text-red-500">
+          <p id="payload-rules-editor-error" className="text-sm text-red-500">
             {t("payloadJsonParseError", { error: parsedEditor.error })}
           </p>
         )}

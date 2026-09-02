@@ -3382,11 +3382,15 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
 
                 {isExpertMode && (
                   <div className="mt-3 rounded-md border border-black/8 dark:border-white/8 bg-white/70 dark:bg-white/[0.03] px-2.5 py-2">
-                    <label className="text-[10px] font-medium uppercase tracking-wide text-text-muted block mb-1">
+                    <label
+                      htmlFor="combo-manual-model"
+                      className="text-[10px] font-medium uppercase tracking-wide text-text-muted block mb-1"
+                    >
                       {getI18nOrFallback(t, "manualModel", "Manual model")}
                     </label>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input
+                        id="combo-manual-model"
                         type="text"
                         value={manualModelInput}
                         onChange={(e) => {
@@ -3400,6 +3404,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                           }
                         }}
                         placeholder="provider/model"
+                        aria-label={getI18nOrFallback(t, "manualModel", "Manual model")}
                         data-testid="combo-manual-model-input"
                         className="flex-1 text-xs py-2 px-2 rounded border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 text-text-main focus:border-primary focus:outline-none font-mono"
                       />
@@ -3762,11 +3767,13 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                       {strategy === "weighted" && (
                         <div className="flex items-center gap-0.5 shrink-0">
                           <input
+                            id={`combo-weight-${index}`}
                             type="number"
                             min="0"
                             max="100"
                             value={entry.weight}
                             onChange={(e) => handleWeightChange(index, e.target.value)}
+                            aria-label={getI18nOrFallback(t, "weightPercent", "Weight percent")}
                             className="w-10 text-[11px] text-center py-0.5 rounded border border-black/10 dark:border-white/10 bg-transparent focus:border-primary focus:outline-none"
                           />
                           <span className="text-[10px] text-text-muted">%</span>
@@ -3951,8 +3958,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                           ADVANCED_FIELD_HELP_FALLBACK.maxRetries
                         )}
                         showHelp={!isExpertMode}
+                        htmlFor="combo-max-retries"
                       />
                       <input
+                        id="combo-max-retries"
                         type="number"
                         min="0"
                         max="10"
@@ -3976,8 +3985,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                           ADVANCED_FIELD_HELP_FALLBACK.retryDelay
                         )}
                         showHelp={!isExpertMode}
+                        htmlFor="combo-retry-delay"
                       />
                       <input
+                        id="combo-retry-delay"
                         type="number"
                         min="0"
                         max="60000"
@@ -4112,8 +4123,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                           ADVANCED_FIELD_HELP_FALLBACK.maxSetRetries
                         )}
                         showHelp={!isExpertMode}
+                        htmlFor="combo-max-set-retries"
                       />
                       <input
+                        id="combo-max-set-retries"
                         type="number"
                         min="0"
                         max="10"
@@ -4137,8 +4150,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                           ADVANCED_FIELD_HELP_FALLBACK.setRetryDelayMs
                         )}
                         showHelp={!isExpertMode}
+                        htmlFor="combo-set-retry-delay"
                       />
                       <input
+                        id="combo-set-retry-delay"
                         type="number"
                         min="0"
                         max="60000"
@@ -4166,8 +4181,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             ADVANCED_FIELD_HELP_FALLBACK.concurrencyPerModel
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-concurrency-per-model"
                         />
                         <input
+                          id="combo-concurrency-per-model"
                           type="number"
                           min="1"
                           max="20"
@@ -4193,8 +4210,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             ADVANCED_FIELD_HELP_FALLBACK.queueTimeout
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-queue-timeout"
                         />
                         <input
+                          id="combo-queue-timeout"
                           type="number"
                           min="1000"
                           max="120000"
@@ -4219,8 +4238,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             ADVANCED_FIELD_HELP_FALLBACK.stickyLimit
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-sticky-limit"
                         />
                         <input
+                          id="combo-sticky-limit"
                           type="number"
                           min="0"
                           max="1000"
@@ -4254,8 +4275,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             ADVANCED_FIELD_HELP_FALLBACK.stickyWeightedLimit
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-sticky-weighted-limit"
                         />
                         <input
+                          id="combo-sticky-weighted-limit"
                           type="number"
                           min="0"
                           max="1000"
@@ -4284,8 +4307,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                           ADVANCED_FIELD_HELP_FALLBACK.nestedComboMode
                         )}
                         showHelp={!isExpertMode}
+                        htmlFor="combo-nested-combo-mode"
                       />
                       <select
+                        id="combo-nested-combo-mode"
                         value={config.nestedComboMode ?? "flatten"}
                         onChange={(e) =>
                           setConfig({
@@ -4322,8 +4347,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                           "Rotate to a different connection on every request instead of pinning a whole conversation to one connection by the first-message hash. Overrides the global default. Leave on Inherit to preserve prompt-cache hits for multi-turn chats."
                         )}
                         showHelp={!isExpertMode}
+                        htmlFor="combo-disable-session-stickiness"
                       />
                       <select
+                        id="combo-disable-session-stickiness"
                         value={
                           config.disableSessionStickiness === true
                             ? "disabled"
@@ -4371,8 +4398,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             "When quota usage reaches this threshold, OmniRoute generates a structured handoff summary before the account is exhausted."
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-handoff-threshold"
                         />
                         <input
+                          id="combo-handoff-threshold"
                           type="number"
                           min="0.5"
                           max="0.94"
@@ -4401,8 +4430,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             "Limits how much recent history is condensed into the relay summary."
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-max-messages-for-summary"
                         />
                         <input
+                          id="combo-max-messages-for-summary"
                           type="number"
                           min="5"
                           max="100"
@@ -4428,8 +4459,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             "Optional override model used only for generating the handoff summary. Leave empty to reuse the active combo model."
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-summary-model"
                         />
                         <input
+                          id="combo-summary-model"
                           type="text"
                           value={config.handoffModel ?? ""}
                           placeholder="codex/gpt-5.6-sol"
@@ -4466,8 +4499,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             "Model that synthesizes the panel answers into one final response. Leave empty to use the first panel model."
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-fusion-judge-model"
                         />
                         <input
+                          id="combo-fusion-judge-model"
                           type="text"
                           value={config.judgeModel ?? ""}
                           placeholder={models[0]?.model || "openai/gpt-5.5"}
@@ -4486,8 +4521,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             "Successful panel answers required before stragglers get a grace window (default 2)."
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-fusion-min-panel"
                         />
                         <input
+                          id="combo-fusion-min-panel"
                           type="number"
                           min="1"
                           max="50"
@@ -4512,8 +4549,10 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, combo
                             "How long to wait for slow panel models once quorum is reached (default 8000)."
                           )}
                           showHelp={!isExpertMode}
+                          htmlFor="combo-fusion-straggler-grace"
                         />
                         <input
+                          id="combo-fusion-straggler-grace"
                           type="number"
                           min="0"
                           max="120000"

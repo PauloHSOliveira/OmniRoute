@@ -96,7 +96,11 @@ export default function ModelAliasesTab() {
       <div className="p-4 rounded-lg bg-surface/30 border border-border/30 mb-4">
         <p className="text-sm font-medium mb-3">{t("addCustomAlias")}</p>
         <div className="flex items-center gap-2">
+          <label htmlFor="model-alias-from" className="sr-only">
+            {t("deprecatedModelId")}
+          </label>
           <input
+            id="model-alias-from"
             type="text"
             placeholder={t("deprecatedModelId")}
             value={newFrom}
@@ -104,7 +108,11 @@ export default function ModelAliasesTab() {
             className="flex-1 px-3 py-2 rounded-lg text-sm bg-surface border border-border/50 focus:border-amber-500/50 focus:outline-none"
           />
           <span className="text-text-muted text-lg">→</span>
+          <label htmlFor="model-alias-to" className="sr-only">
+            {t("newModelId")}
+          </label>
           <input
+            id="model-alias-to"
             type="text"
             placeholder={t("newModelId")}
             value={newTo}

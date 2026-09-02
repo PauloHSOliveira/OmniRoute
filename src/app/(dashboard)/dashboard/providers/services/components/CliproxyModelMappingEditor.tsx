@@ -191,6 +191,10 @@ export function CliproxyModelMappingEditor() {
         }}
         spellCheck={false}
         aria-label={t("modelMappingEditor")}
+        aria-invalid={!isValid}
+        aria-describedby={
+          !isValid && validationMessage ? "cliproxy-model-mapping-error" : undefined
+        }
       />
 
       {validationMessage && rawText !== EMPTY_MAPPING && (

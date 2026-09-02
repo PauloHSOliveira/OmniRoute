@@ -969,8 +969,14 @@ export default function SystemStorageTab() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {retentionFields.map(([key, label, fallback]) => (
             <div key={String(key)}>
-              <label className="block text-xs text-text-muted mb-1">{label}</label>
+              <label
+                htmlFor={`${String(key)}-retention-days`}
+                className="block text-xs text-text-muted mb-1"
+              >
+                {label}
+              </label>
               <input
+                id={`${String(key)}-retention-days`}
                 type="number"
                 min="1"
                 max="365"
@@ -1033,10 +1039,14 @@ export default function SystemStorageTab() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-text-muted mb-1">
+              <label
+                htmlFor="storage-auto-vacuum-mode"
+                className="block text-xs text-text-muted mb-1"
+              >
                 {t("storageAutoVacuumMode")}
               </label>
               <select
+                id="storage-auto-vacuum-mode"
                 value={dbSettings.optimization.autoVacuumMode}
                 onChange={(e) =>
                   setDbSettings({
@@ -1055,10 +1065,14 @@ export default function SystemStorageTab() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-text-muted mb-1">
+              <label
+                htmlFor="storage-scheduled-vacuum"
+                className="block text-xs text-text-muted mb-1"
+              >
                 {t("storageScheduledVacuum")}
               </label>
               <select
+                id="storage-scheduled-vacuum"
                 value={dbSettings.optimization.scheduledVacuum}
                 onChange={(e) =>
                   setDbSettings({
@@ -1078,8 +1092,11 @@ export default function SystemStorageTab() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-text-muted mb-1">{t("storageVacuumHour")}</label>
+              <label htmlFor="storage-vacuum-hour" className="block text-xs text-text-muted mb-1">
+                {t("storageVacuumHour")}
+              </label>
               <input
+                id="storage-vacuum-hour"
                 type="number"
                 min="0"
                 max="23"
@@ -1097,8 +1114,11 @@ export default function SystemStorageTab() {
               />
             </div>
             <div>
-              <label className="block text-xs text-text-muted mb-1">{t("storagePageSize")}</label>
+              <label htmlFor="storage-page-size" className="block text-xs text-text-muted mb-1">
+                {t("storagePageSize")}
+              </label>
               <input
+                id="storage-page-size"
                 type="number"
                 min="512"
                 max="65536"
