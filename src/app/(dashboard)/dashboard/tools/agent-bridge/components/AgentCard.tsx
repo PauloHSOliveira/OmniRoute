@@ -59,7 +59,7 @@ export function AgentCard({
   const getStatusBadge = () => {
     if (isInvestigating) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-500/10 text-zinc-500 dark:text-zinc-400 text-xs font-medium">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-600/10 text-zinc-700 dark:bg-zinc-500/10 dark:text-zinc-400 text-xs font-medium">
           <span className="material-symbols-outlined text-[12px]">search</span>
           {t("statusInvestigating") || "Investigating"}
         </span>
@@ -75,7 +75,7 @@ export function AgentCard({
     }
     if (!setupCompleted) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-500/10 text-zinc-500 text-xs font-medium">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-600/10 text-zinc-700 dark:bg-zinc-500/10 dark:text-zinc-400 text-xs font-medium">
           <span className="material-symbols-outlined text-[12px]">settings</span>
           {t("statusSetupRequired") || "Setup required"}
         </span>
@@ -168,7 +168,7 @@ export function AgentCard({
             {/* Cert status */}
             <div className="flex items-center gap-2 text-xs text-text-muted">
               <span
-                className={`material-symbols-outlined text-[14px] ${certTrusted ? "text-emerald-500" : "text-zinc-400"}`}
+                className={`material-symbols-outlined text-[14px] ${certTrusted ? "text-emerald-600 dark:text-emerald-500" : "text-zinc-700 dark:text-zinc-400"}`}
               >
                 {certTrusted ? "verified_user" : "lock_open"}
               </span>

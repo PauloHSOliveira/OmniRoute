@@ -14,6 +14,19 @@ const button = fs.readFileSync(
   new URL("../../../src/shared/components/Button.tsx", import.meta.url),
   "utf8"
 );
+const auditedSurfaces = [
+  "../../../src/app/(dashboard)/dashboard/radar/RadarCatalogTable.tsx",
+  "../../../src/app/(dashboard)/dashboard/tokens/page.tsx",
+  "../../../src/app/(dashboard)/dashboard/plugins/page.tsx",
+  "../../../src/app/(dashboard)/dashboard/plugins/[name]/config/page.tsx",
+  "../../../src/app/(dashboard)/dashboard/tools/agent-bridge/components/AgentBridgeServerCard.tsx",
+  "../../../src/app/(dashboard)/dashboard/tools/agent-bridge/components/AgentCard.tsx",
+  "../../../src/app/(dashboard)/dashboard/tools/agent-bridge/components/shared/CertStatusIcon.tsx",
+  "../../../src/app/(dashboard)/dashboard/tools/agent-bridge/components/shared/DnsStatusBadge.tsx",
+  "../../../src/app/(dashboard)/dashboard/acp-agents/page.tsx",
+]
+  .map((file) => fs.readFileSync(new URL(file, import.meta.url), "utf8"))
+  .join("\n");
 
 const lightTokens = Object.fromEntries(
   [...globalsCss.matchAll(/--color-([\w-]+):\s*(#[0-9a-f]{6})/gi)].map((match) => [
@@ -46,6 +59,13 @@ test("shared semantic components use theme tokens", () => {
   assert.match(badge, /bg-error\/10 text-error/);
   assert.match(button, /bg-warning text-white/);
   assert.match(button, /bg-error text-white/);
+});
+
+test("audited dashboard surfaces avoid low-contrast light-mode gray text", () => {
+  assert.doesNotMatch(
+    auditedSurfaces.replace(/dark:text-(gray|slate|zinc|neutral)-(400|500)/g, ""),
+    /text-(gray|slate|zinc|neutral)-(400|500)/
+  );
 });
 
 test("light and dark themes define the shared text token set", () => {

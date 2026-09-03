@@ -85,7 +85,7 @@ export default function PluginConfigPage({ params }: { params: Promise<{ name: s
 
       {schemaKeys.length === 0 ? (
         <Card className="p-4">
-          <p className="text-gray-500">{t("noConfigSettings")}</p>
+          <p className="text-gray-700 dark:text-gray-400">{t("noConfigSettings")}</p>
         </Card>
       ) : (
         <Card className="space-y-4 p-4">
@@ -98,7 +98,9 @@ export default function PluginConfigPage({ params }: { params: Promise<{ name: s
                 <label className="text-sm font-medium">
                   {key}
                   {field.description && (
-                    <span className="ml-2 text-xs text-gray-500">{field.description}</span>
+                    <span className="ml-2 text-xs text-gray-700 dark:text-gray-400">
+                      {field.description}
+                    </span>
                   )}
                 </label>
                 {field.type === "boolean" ? (

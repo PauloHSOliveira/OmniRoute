@@ -251,7 +251,7 @@ export default function AgentsPage() {
                   className={`p-2 rounded-lg ${
                     agent.installed
                       ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                      : "bg-zinc-500/10 text-zinc-400"
+                      : "bg-zinc-600/10 text-zinc-700 dark:bg-zinc-500/10 dark:text-zinc-400"
                   }`}
                 >
                   {getAgentIconId(agent.id) ? (
@@ -281,7 +281,7 @@ export default function AgentsPage() {
                     {agent.version || t("installed")}
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-zinc-500/10 text-zinc-500 font-medium">
+                  <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-zinc-600/10 text-zinc-700 dark:bg-zinc-500/10 dark:text-zinc-400 font-medium">
                     <span className="material-symbols-outlined text-[12px]">cancel</span>
                     {t("notFound")}
                   </span>

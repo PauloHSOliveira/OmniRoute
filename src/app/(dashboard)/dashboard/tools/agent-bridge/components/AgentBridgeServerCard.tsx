@@ -9,7 +9,9 @@ import type { AgentBridgeServerState } from "../AgentBridgePageClient";
 
 interface AgentBridgeServerCardProps {
   serverState: AgentBridgeServerState;
-  onAction: (action: "start" | "stop" | "restart" | "trust-cert" | "regenerate-cert") => Promise<void>;
+  onAction: (
+    action: "start" | "stop" | "restart" | "trust-cert" | "regenerate-cert"
+  ) => Promise<void>;
   onUpstreamCaSave: (path: string) => Promise<void>;
   onBypassSave: (patterns: string[]) => Promise<void>;
   bypassPatterns: string[];
@@ -31,7 +33,9 @@ export function AgentBridgeServerCard({
   const [expanded, setExpanded] = useState(false);
   const [upstreamCa, setUpstreamCa] = useState(serverState.upstreamCa ?? "");
 
-  const runAction = async (action: "start" | "stop" | "restart" | "trust-cert" | "regenerate-cert") => {
+  const runAction = async (
+    action: "start" | "stop" | "restart" | "trust-cert" | "regenerate-cert"
+  ) => {
     setLoading(action);
     try {
       await onAction(action);
@@ -57,7 +61,7 @@ export function AgentBridgeServerCard({
                 className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                   isRunning
                     ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                    : "bg-zinc-500/10 text-zinc-500 dark:text-zinc-400"
+                    : "bg-zinc-600/10 text-zinc-700 dark:bg-zinc-500/10 dark:text-zinc-400"
                 }`}
               >
                 <span
@@ -78,7 +82,8 @@ export function AgentBridgeServerCard({
               )}
               {serverState.interceptedCount !== undefined && (
                 <span>
-                  {t("serverIntercepted") || "Intercepted"}: {serverState.interceptedCount.toLocaleString()}
+                  {t("serverIntercepted") || "Intercepted"}:{" "}
+                  {serverState.interceptedCount.toLocaleString()}
                 </span>
               )}
               {serverState.lastStartedAt && (
@@ -135,7 +140,9 @@ export function AgentBridgeServerCard({
           className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/10 text-amber-600 px-3 py-1.5 text-xs font-medium hover:bg-amber-500/20 transition-colors disabled:opacity-50"
         >
           <span className="material-symbols-outlined text-[14px]">refresh</span>
-          {loading === "restart" ? t("restarting") || "Restarting…" : t("restartServer") || "Restart"}
+          {loading === "restart"
+            ? t("restarting") || "Restarting…"
+            : t("restartServer") || "Restart"}
         </button>
 
         <button
@@ -176,11 +183,7 @@ export function AgentBridgeServerCard({
       {/* Expanded: CA + Bypass */}
       {expanded && (
         <div className="px-5 pb-5 border-t border-border/30 pt-4 flex flex-col gap-5">
-          <UpstreamCaField
-            value={upstreamCa}
-            onChange={setUpstreamCa}
-            onSave={onUpstreamCaSave}
-          />
+          <UpstreamCaField value={upstreamCa} onChange={setUpstreamCa} onSave={onUpstreamCaSave} />
           <div>
             <h4 className="text-xs font-semibold text-text-main mb-2">
               {t("bypassSectionTitle") || "Bypass List"}
@@ -189,10 +192,7 @@ export function AgentBridgeServerCard({
               {t("bypassSectionDesc") ||
                 "Hosts matching these patterns are tunneled directly (no TLS decryption). Defaults include banks, .gov, and corporate SSO."}
             </p>
-            <BypassListEditor
-              patterns={bypassPatterns}
-              onSave={onBypassSave}
-            />
+            <BypassListEditor patterns={bypassPatterns} onSave={onBypassSave} />
           </div>
         </div>
       )}
