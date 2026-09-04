@@ -416,8 +416,7 @@ export default function ConnectionRow({
   // #11497: cookie rows with a decodable JWT credential carry a persisted
   // cookieExpiresAt — feed it into the same countdown badge OAuth rows use.
   const cookieExpiresAt = readCookieExpiresAt(connection.providerSpecificData);
-  const effectiveExpiresAt =
-    connection.tokenExpiresAt || connection.expiresAt || cookieExpiresAt;
+  const effectiveExpiresAt = connection.tokenExpiresAt || connection.expiresAt || cookieExpiresAt;
   const hasExpirySource = isOAuth || Boolean(cookieExpiresAt);
   const getTokenMinsLeft = () => {
     if (!hasExpirySource || !effectiveExpiresAt) return null;
@@ -537,6 +536,7 @@ export default function ConnectionRow({
             type="checkbox"
             checked={isSelected}
             onChange={onToggleSelect}
+            aria-label={`Select connection ${displayName}`}
             className="w-4 h-4 shrink-0 rounded border-border text-primary focus:ring-primary/30 cursor-pointer"
           />
         )}
@@ -704,6 +704,7 @@ export default function ConnectionRow({
                   }
                   className="text-xs font-medium rounded px-1.5 py-0.5 border-0 bg-black/[0.03] dark:bg-white/[0.03] text-text-muted/70 hover:text-text-muted cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary/30"
                   title="Upstream proxy routing for Claude Code traffic"
+                  aria-label="Upstream proxy routing for Claude Code traffic"
                 >
                   <option value="native">Native</option>
                   <option value="cliproxyapi">CLIProxyAPI</option>

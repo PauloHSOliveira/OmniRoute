@@ -60,6 +60,8 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const t = useTranslations("sidebar");
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -87,8 +89,41 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
   }, []);
 
   useEffect(() => {
-    const id = setTimeout(() => inputRef.current?.focus(), 30);
-    return () => clearTimeout(id);
+    previouslyFocusedRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const id = window.setTimeout(() => inputRef.current?.focus(), 30);
+    return () => {
+      window.clearTimeout(id);
+      previouslyFocusedRef.current?.focus();
+      previouslyFocusedRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const handleTab = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    dialog.addEventListener("keydown", handleTab);
+    return () => dialog.removeEventListener("keydown", handleTab);
   }, []);
 
   const safeTranslate = useCallback(
@@ -258,13 +293,17 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
         aria-hidden="true"
       />
       <div
+        ref={dialogRef}
         className="relative w-full max-w-3xl bg-surface border border-black/10 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
         aria-label={t("commandPalette.title")}
       >
         <div className="flex items-center gap-3 px-6 py-4 border-b border-black/5 dark:border-white/5">
-          <span className="material-symbols-outlined text-[20px] text-text-muted shrink-0">
+          <span
+            className="material-symbols-outlined text-[20px] text-text-muted shrink-0"
+            aria-hidden="true"
+          >
             search
           </span>
           <input
@@ -343,6 +382,7 @@ function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
                               onMouseEnter={() => setSelectedIndex(flatIndex)}
                             >
                               <span
+                                aria-hidden="true"
                                 className={`material-symbols-outlined text-[18px] shrink-0 ${
                                   flatIndex === selectedIndex ? "text-accent" : "text-text-muted"
                                 }`}

@@ -77,7 +77,11 @@ export default function UsageTokenBufferTab() {
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
+        <label htmlFor="usage-token-buffer" className="sr-only">
+          {t("storageUsageTokenBuffer")}
+        </label>
         <input
+          id="usage-token-buffer"
           type="number"
           min={0}
           max={50000}

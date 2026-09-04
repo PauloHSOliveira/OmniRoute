@@ -113,7 +113,7 @@ export default function PluginsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold">{plugin.name}</h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-700 dark:text-gray-400">
                     v{plugin.version}
                     {plugin.author ? ` by ${plugin.author}` : ""}
                     {plugin.description ? ` — ${plugin.description}` : ""}

@@ -47,6 +47,7 @@ describe("resolveRuntimePorts", () => {
     delete process.env.API_PORT;
     delete process.env.DASHBOARD_PORT;
     delete process.env.OMNIROUTE_PORT;
+    delete process.env.OMNIROUTE_DEV_PORT;
   });
 
   afterEach(() => {
@@ -57,11 +58,30 @@ describe("resolveRuntimePorts", () => {
     Object.assign(process.env, originalEnv);
   });
 
-  it("returns default ports when no env vars set", () => {
+  it("returns the production ports when no env vars are set", () => {
+    process.env.NODE_ENV = "production";
     const ports = resolveRuntimePorts();
     assert.equal(ports.basePort, 20128);
     assert.equal(ports.apiPort, 20128);
     assert.equal(ports.dashboardPort, 20128);
+  });
+
+  it("uses an isolated port in development", () => {
+    process.env.NODE_ENV = "development";
+    const ports = resolveRuntimePorts();
+    assert.equal(ports.basePort, 21128);
+    assert.equal(ports.apiPort, 21128);
+    assert.equal(ports.dashboardPort, 21128);
+  });
+
+  it("uses the explicit development port override", () => {
+    process.env.NODE_ENV = "development";
+    process.env.OMNIROUTE_DEV_PORT = "22128";
+    delete process.env.PORT;
+    const ports = resolveRuntimePorts();
+    assert.equal(ports.basePort, 22128);
+    assert.equal(ports.apiPort, 22128);
+    assert.equal(ports.dashboardPort, 22128);
   });
 
   it("uses PORT as base for all ports", () => {

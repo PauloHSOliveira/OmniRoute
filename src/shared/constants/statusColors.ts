@@ -10,9 +10,9 @@
  * utilities (`text-success`, `bg-error/10`, …) which already read the same tokens.
  */
 export const STATUS_HEX = {
-  success: "#22c55e",
-  warning: "#f59e0b",
-  error: "#ef4444",
+  success: "#16a34a",
+  warning: "#d97706",
+  error: "#dc2626",
   muted: "#6b7280",
   /** Human-approval gate (waiting_approval) — violet, matching the industry de-facto palette. */
   approval: "#8b5cf6",

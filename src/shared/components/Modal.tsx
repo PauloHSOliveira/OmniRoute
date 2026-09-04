@@ -163,8 +163,8 @@ export default function Modal({
         aria-labelledby={title ? titleId : undefined}
         className={cn(
           "relative w-full bg-surface",
-          "border border-black/10 dark:border-white/10",
-          "rounded-card shadow-2xl",
+          "border border-border",
+          "rounded-card shadow-elevated",
           "animate-in fade-in zoom-in-95 duration-200",
           sizes[size],
           className
@@ -174,43 +174,17 @@ export default function Modal({
         {(title || showCloseButton) && (
           <div
             className={cn(
-              "flex items-center justify-between border-b border-black/5 dark:border-white/5",
-              compactHeader ? "px-4 py-2.5" : "p-6"
+              "flex items-center justify-between border-b border-border",
+              compactHeader ? "px-4 py-2.5" : "p-5"
             )}
           >
             <div className="flex items-center min-w-0">
-              <div
-                className={cn(
-                  "flex items-center gap-1.5 mr-3 shrink-0",
-                  compactHeader ? "" : "gap-2 mr-4"
-                )}
-                aria-hidden="true"
-              >
-                <div
-                  className={cn(
-                    "rounded-full bg-[#FF5F56]",
-                    compactHeader ? "w-2.5 h-2.5" : "w-3 h-3"
-                  )}
-                />
-                <div
-                  className={cn(
-                    "rounded-full bg-[#FFBD2E]",
-                    compactHeader ? "w-2.5 h-2.5" : "w-3 h-3"
-                  )}
-                />
-                <div
-                  className={cn(
-                    "rounded-full bg-[#27C93F]",
-                    compactHeader ? "w-2.5 h-2.5" : "w-3 h-3"
-                  )}
-                />
-              </div>
               {title && (
                 <h2
                   id={titleId}
                   className={cn(
                     "font-semibold text-text-main truncate min-w-0",
-                    compactHeader ? "text-sm" : "text-lg"
+                    compactHeader ? "text-sm" : "text-base"
                   )}
                 >
                   {title}
@@ -221,7 +195,7 @@ export default function Modal({
               <button
                 onClick={onClose}
                 aria-label={t("close")}
-                className="p-1.5 rounded-lg text-text-muted hover:bg-black/5 dark:hover:bg-white/5 transition-colors shrink-0"
+                className="p-1.5 rounded-md text-text-muted hover:bg-black/5 dark:hover:bg-white/5 transition-colors shrink-0"
               >
                 <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
                   close
@@ -238,7 +212,7 @@ export default function Modal({
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 p-6 border-t border-black/5 dark:border-white/5">
+          <div className="flex items-center justify-end gap-3 p-5 border-t border-border">
             {footer}
           </div>
         )}

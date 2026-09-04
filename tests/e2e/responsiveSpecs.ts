@@ -26,7 +26,11 @@ export const PAGES = [
   { path: "/login", name: "Login", requiresAuth: false },
   { path: "/dashboard", name: "Dashboard", requiresAuth: true },
   { path: "/dashboard/providers", name: "Providers", requiresAuth: true },
-  { path: "/dashboard/settings", name: "Settings", requiresAuth: true },
+  { path: "/dashboard/combos", name: "Combos", requiresAuth: true },
+  { path: "/dashboard/analytics", name: "Analytics", requiresAuth: true },
+  { path: "/dashboard/settings/general", name: "Settings", requiresAuth: true },
+  { path: "/dashboard/logs", name: "Logs", requiresAuth: true },
+  { path: "/dashboard/health", name: "Health", requiresAuth: true },
 ];
 
 /**

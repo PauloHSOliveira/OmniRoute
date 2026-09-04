@@ -454,220 +454,219 @@ const ProviderCard = forwardRef<ProviderCardHandle, ProviderCardProps>(function 
 
   return (
     <div ref={innerRef} id={`provider-${providerId}`} className="flex flex-col h-full">
-      <Link
-        ref={linkElementRef}
-        href={`/dashboard/providers/${providerId}`}
-        className="group flex-1 flex flex-col focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60"
-        onClick={handleCardClick}
+      <Card
+        padding="xs"
+        className={`group relative h-full flex flex-col hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${
+          isKimiPartner
+            ? // Kimi (Moonshot AI) official-partnership accent — official Kimi blue
+              // (#1783FF) border (2px, clearly legible) + a subtle whole-card tint
+              // (inset shadow — avoids clobbering Card's own bg-surface via
+              // twMerge) + soft outer glow. Kept identical in light/dark since it
+              // is a raw (non-token) brand hex, not a theme color. Keep the hex in
+              // sync with KIMI_BRAND_COLOR (featuredProviders.ts).
+              "border-2 border-[#1783FF]/70 hover:border-[#1783FF]/90 shadow-[inset_0_0_0_100px_rgba(23,131,255,0.035),0_4px_16px_-4px_rgba(23,131,255,0.45)]"
+            : isCheaperInferencePartner
+              ? // Cheaper Inference Open Source Friend accent — same construction in
+                // its brand green (#31f889 = rgb(49,248,137)). Keep in sync with
+                // CHEAPERINFERENCE_BRAND_COLOR (featuredProviders.ts).
+                "border-2 border-[#31f889]/70 hover:border-[#31f889]/90 shadow-[inset_0_0_0_100px_rgba(49,248,137,0.035),0_4px_16px_-4px_rgba(49,248,137,0.45)]"
+              : "hover:border-primary/40"
+        } ${allDisabled ? "opacity-50" : ""} ${provider.deprecated ? "opacity-60" : ""}`}
       >
-        <Card
-          padding="xs"
-          className={`h-full flex flex-col hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer ${
-            isKimiPartner
-              ? // Kimi (Moonshot AI) official-partnership accent — official Kimi blue
-                // (#1783FF) border (2px, clearly legible) + a subtle whole-card tint
-                // (inset shadow — avoids clobbering Card's own bg-surface via
-                // twMerge) + soft outer glow. Kept identical in light/dark since it
-                // is a raw (non-token) brand hex, not a theme color. Keep the hex in
-                // sync with KIMI_BRAND_COLOR (featuredProviders.ts).
-                "border-2 border-[#1783FF]/70 hover:border-[#1783FF]/90 shadow-[inset_0_0_0_100px_rgba(23,131,255,0.035),0_4px_16px_-4px_rgba(23,131,255,0.45)]"
-              : isCheaperInferencePartner
-                ? // Cheaper Inference Open Source Friend accent — same construction in
-                  // its brand green (#31f889 = rgb(49,248,137)). Keep in sync with
-                  // CHEAPERINFERENCE_BRAND_COLOR (featuredProviders.ts).
-                  "border-2 border-[#31f889]/70 hover:border-[#31f889]/90 shadow-[inset_0_0_0_100px_rgba(49,248,137,0.035),0_4px_16px_-4px_rgba(49,248,137,0.45)]"
-                : "hover:border-primary/40"
-          } ${allDisabled ? "opacity-50" : ""} ${provider.deprecated ? "opacity-60" : ""}`}
-        >
-          <div className="flex flex-col gap-2 h-full">
-            {/* Row 1 — Identity: icon + full name + risk/category indicators */}
-            <div className="flex items-start gap-3 min-w-0">
-              <div
-                className="size-9 rounded-lg flex items-center justify-center shrink-0"
-                style={{ backgroundColor: `${provider.color || "#64748b"}15` }}
-              >
-                {provider.iconUrl ? (
-                  <ProviderIcon
-                    providerId={provider.id || providerId}
-                    src={provider.iconUrl}
-                    alt={provider.name}
-                    size={26}
-                    className="max-h-[26px] max-w-[26px] rounded-lg object-contain"
-                    fallbackText={provider.textIcon}
-                    fallbackColor={provider.color}
-                  />
-                ) : staticIconPath ? (
-                  <Image
-                    src={staticIconPath}
-                    alt={provider.name}
-                    width={26}
-                    height={26}
-                    className="object-contain rounded-lg max-w-[26px] max-h-[26px]"
-                    sizes="26px"
-                  />
-                ) : (
-                  <ProviderIcon providerId={provider.id || providerId} size={24} type="color" />
-                )}
-              </div>
-              <h3 className="text-sm font-semibold leading-snug flex-1 min-w-0">
-                <span
-                  className={`block break-words ${provider.deprecated ? "line-through opacity-60" : ""}`}
-                  title={provider.name}
-                >
-                  {provider.name}
-                </span>
-              </h3>
-              <div className="flex items-center gap-1 shrink-0 pt-0.5">
-                {provider.deprecated && (
-                  <span
-                    className="material-symbols-outlined text-[16px] leading-none text-text-muted"
-                    title={provider.deprecationReason || t("deprecatedProvider")}
-                    aria-label={t("deprecated")}
-                  >
-                    block
-                  </span>
-                )}
-                {provider.subscriptionRisk === true && (
-                  <button
-                    type="button"
-                    className="material-symbols-outlined text-[16px] leading-none text-amber-500 underline decoration-dotted decoration-1 underline-offset-2 hover:text-amber-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60 transition-colors"
-                    title={t("riskNotice.tooltip")}
-                    aria-label={t("riskNotice.tooltip")}
-                    aria-haspopup="dialog"
-                    onClick={handleRiskIndicatorActivate}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") handleRiskIndicatorActivate(e);
-                    }}
-                  >
-                    info
-                  </button>
-                )}
-                <CategoryDot
-                  color={DOT_COLORS[authType] || DOT_COLORS.apikey}
-                  hasFree={provider.hasFree === true}
-                  label={dotLabels[authType] || t("apiKeyLabel")}
-                  freeLabel={t("hasFreeTooltip")}
+        <Link
+          ref={linkElementRef}
+          href={`/dashboard/providers/${providerId}`}
+          className="absolute inset-0 z-0 rounded-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60"
+          onClick={handleCardClick}
+          aria-label={provider.name}
+        />
+        <div className="relative z-10 pointer-events-none flex flex-col gap-2 h-full">
+          <div className="flex items-start gap-3 min-w-0">
+            <div
+              className="size-9 rounded-lg flex items-center justify-center shrink-0"
+              style={{ backgroundColor: `${provider.color || "#64748b"}15` }}
+            >
+              {provider.iconUrl ? (
+                <ProviderIcon
+                  providerId={provider.id || providerId}
+                  src={provider.iconUrl}
+                  alt={provider.name}
+                  size={26}
+                  className="max-h-[26px] max-w-[26px] rounded-lg object-contain"
+                  fallbackText={provider.textIcon}
+                  fallbackColor={provider.color}
                 />
-              </div>
+              ) : staticIconPath ? (
+                <Image
+                  src={staticIconPath}
+                  alt={provider.name}
+                  width={26}
+                  height={26}
+                  className="object-contain rounded-lg max-w-[26px] max-h-[26px]"
+                  sizes="26px"
+                />
+              ) : (
+                <ProviderIcon providerId={provider.id || providerId} size={24} type="color" />
+              )}
             </div>
-
-            {/* Row 2 — Capabilities: service-kind chips + compatibility badges (deprecated shown as block icon in Row 1 header). Rendered only when content exists. */}
-            {((provider.serviceKinds && provider.serviceKinds.length > 0) ||
-              isCompatible ||
-              isCcCompatible ||
-              isAnthropicCompatible ||
-              isSponsorPartner ||
-              Boolean(openRouterStat)) && (
-              <div className="flex flex-wrap items-center gap-1">
-                {kimiOfficialSupporterChip}
-                {cheaperInferenceSupporterChip}
-                {openRouterPopularityChip}
-                {provider.serviceKinds?.map((k) => (
-                  <span
-                    key={k}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-bg-subtle border border-border text-text-muted leading-none"
-                  >
-                    {kindLabel(k)}
-                  </span>
-                ))}
-                {isCompatible && (
-                  <Badge variant="default" size="sm">
-                    {provider.apiType === "responses"
-                      ? t("responses")
-                      : kindLabel(COMPATIBLE_API_TYPE_KIND[provider.apiType ?? ""] ?? "") ||
-                        t("chat")}
-                  </Badge>
-                )}
-                {isCcCompatible && (
-                  <Badge variant="default" size="sm">
-                    CC
-                  </Badge>
-                )}
-                {isAnthropicCompatible && (
-                  <Badge variant="default" size="sm">
-                    {t("messages")}
-                  </Badge>
-                )}
-              </div>
-            )}
-
-            {/* Row 3 — Footer: connection status + controls (toggle, test) */}
-            <div className="flex items-center justify-between gap-2 mt-auto pt-1.5 border-t border-border/40">
-              <div className="flex items-center gap-1.5 text-xs flex-nowrap min-w-0 overflow-hidden">
-                {allDisabled ? (
-                  <Badge variant="default" size="sm">
-                    <span className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[12px]">pause_circle</span>
-                      {t("disabled")}
-                    </span>
-                  </Badge>
-                ) : (
-                  <>
-                    {getStatusDisplay(
-                      connected,
-                      error,
-                      Number(stats.warning || 0),
-                      stats.errorCode,
-                      t,
-                      codexServiceTierChip,
-                      Number(stats.warning || 0) > 0
-                        ? {
-                            warningMaxFailures: Number(stats.warningMaxFailures || 0),
-                            warningLastFailureRelative: stats.warningLastFailureRelative ?? null,
-                            onActivate: handleWarningBadgeActivate,
-                          }
-                        : undefined
-                    )}
-                    {stats.expiryStatus === "expired" && (
-                      <Badge variant="error" size="sm" dot>
-                        {t("expiredBadge")}
-                      </Badge>
-                    )}
-                    {stats.expiryStatus === "expiring_soon" && (
-                      <Badge variant="warning" size="sm" dot>
-                        {t("expiringSoonBadge")}
-                      </Badge>
-                    )}
-                    {stats.errorTime && (
-                      <span className="text-text-muted truncate min-w-0">* {stats.errorTime}</span>
-                    )}
-                  </>
-                )}
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                {Number(stats.total || 0) > 0 && (
-                  <div onClick={handleToggle}>
-                    <Toggle
-                      size="xs"
-                      checked={!allDisabled}
-                      onChange={undefined}
-                      title={allDisabled ? t("enableProvider") : t("disableProvider")}
-                    />
-                  </div>
-                )}
-                {isLlmProvider && (
-                  <button
-                    type="button"
-                    onClick={handleTestClick}
-                    title={tp("expandTest")}
-                    className="inline-flex items-center gap-0.5 rounded-md border border-border bg-bg-subtle px-2 py-0.5 text-[11px] text-text-muted hover:text-text-primary hover:border-primary/30 transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-[11px] leading-none">
-                      play_arrow
-                    </span>
-                    {tp("testLabel")}
-                  </button>
-                )}
-                {!isLlmProvider && (
-                  <span className="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-opacity">
-                    chevron_right
-                  </span>
-                )}
-              </div>
+            <h3 className="text-sm font-semibold leading-snug flex-1 min-w-0">
+              <span
+                className={`block break-words ${provider.deprecated ? "line-through opacity-60" : ""}`}
+                title={provider.name}
+              >
+                {provider.name}
+              </span>
+            </h3>
+            <div className="flex items-center gap-1 shrink-0 pt-0.5">
+              {provider.deprecated && (
+                <span
+                  className="material-symbols-outlined text-[16px] leading-none text-text-muted"
+                  title={provider.deprecationReason || t("deprecatedProvider")}
+                  aria-label={t("deprecated")}
+                >
+                  block
+                </span>
+              )}
+              {provider.subscriptionRisk === true && (
+                <button
+                  type="button"
+                  className="pointer-events-auto material-symbols-outlined text-[16px] leading-none text-amber-500 underline decoration-dotted decoration-1 underline-offset-2 hover:text-amber-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60 transition-colors"
+                  title={t("riskNotice.tooltip")}
+                  aria-label={t("riskNotice.tooltip")}
+                  aria-haspopup="dialog"
+                  onClick={handleRiskIndicatorActivate}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") handleRiskIndicatorActivate(e);
+                  }}
+                >
+                  info
+                </button>
+              )}
+              <CategoryDot
+                color={DOT_COLORS[authType] || DOT_COLORS.apikey}
+                hasFree={provider.hasFree === true}
+                label={dotLabels[authType] || t("apiKeyLabel")}
+                freeLabel={t("hasFreeTooltip")}
+              />
             </div>
           </div>
-        </Card>
-      </Link>
+
+          {/* Row 2 — Capabilities: service-kind chips + compatibility badges (deprecated shown as block icon in Row 1 header). Rendered only when content exists. */}
+          {((provider.serviceKinds && provider.serviceKinds.length > 0) ||
+            isCompatible ||
+            isCcCompatible ||
+            isAnthropicCompatible ||
+            isSponsorPartner ||
+            Boolean(openRouterStat)) && (
+            <div className="flex flex-wrap items-center gap-1">
+              {kimiOfficialSupporterChip}
+              {cheaperInferenceSupporterChip}
+              {openRouterPopularityChip}
+              {provider.serviceKinds?.map((k) => (
+                <span
+                  key={k}
+                  className="text-[10px] px-1.5 py-0.5 rounded bg-bg-subtle border border-border text-text-muted leading-none"
+                >
+                  {kindLabel(k)}
+                </span>
+              ))}
+              {isCompatible && (
+                <Badge variant="default" size="sm">
+                  {provider.apiType === "responses"
+                    ? t("responses")
+                    : kindLabel(COMPATIBLE_API_TYPE_KIND[provider.apiType ?? ""] ?? "") ||
+                      t("chat")}
+                </Badge>
+              )}
+              {isCcCompatible && (
+                <Badge variant="default" size="sm">
+                  CC
+                </Badge>
+              )}
+              {isAnthropicCompatible && (
+                <Badge variant="default" size="sm">
+                  {t("messages")}
+                </Badge>
+              )}
+            </div>
+          )}
+
+          {/* Row 3 — Footer: connection status + controls (toggle, test) */}
+          <div className="flex items-center justify-between gap-2 mt-auto pt-1.5 border-t border-border/40">
+            <div className="flex items-center gap-1.5 text-xs flex-nowrap min-w-0 overflow-hidden">
+              {allDisabled ? (
+                <Badge variant="default" size="sm">
+                  <span className="flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[12px]">pause_circle</span>
+                    {t("disabled")}
+                  </span>
+                </Badge>
+              ) : (
+                <>
+                  {getStatusDisplay(
+                    connected,
+                    error,
+                    Number(stats.warning || 0),
+                    stats.errorCode,
+                    t,
+                    codexServiceTierChip,
+                    Number(stats.warning || 0) > 0
+                      ? {
+                          warningMaxFailures: Number(stats.warningMaxFailures || 0),
+                          warningLastFailureRelative: stats.warningLastFailureRelative ?? null,
+                          onActivate: handleWarningBadgeActivate,
+                        }
+                      : undefined
+                  )}
+                  {stats.expiryStatus === "expired" && (
+                    <Badge variant="error" size="sm" dot>
+                      {t("expiredBadge")}
+                    </Badge>
+                  )}
+                  {stats.expiryStatus === "expiring_soon" && (
+                    <Badge variant="warning" size="sm" dot>
+                      {t("expiringSoonBadge")}
+                    </Badge>
+                  )}
+                  {stats.errorTime && (
+                    <span className="text-text-muted truncate min-w-0">* {stats.errorTime}</span>
+                  )}
+                </>
+              )}
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {Number(stats.total || 0) > 0 && (
+                <div className="pointer-events-auto" onClick={handleToggle}>
+                  <Toggle
+                    size="xs"
+                    checked={!allDisabled}
+                    onChange={undefined}
+                    title={allDisabled ? t("enableProvider") : t("disableProvider")}
+                  />
+                </div>
+              )}
+              {isLlmProvider && (
+                <button
+                  type="button"
+                  onClick={handleTestClick}
+                  title={tp("expandTest")}
+                  className="pointer-events-auto inline-flex items-center gap-0.5 rounded-md border border-border bg-bg-subtle px-2 py-0.5 text-[11px] text-text-muted hover:text-text-primary hover:border-primary/30 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[11px] leading-none">
+                    play_arrow
+                  </span>
+                  {tp("testLabel")}
+                </button>
+              )}
+              {!isLlmProvider && (
+                <span className="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-opacity">
+                  chevron_right
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      </Card>
       {isLlmProvider && (
         <ProviderTestSlideOver
           isOpen={testExpanded}

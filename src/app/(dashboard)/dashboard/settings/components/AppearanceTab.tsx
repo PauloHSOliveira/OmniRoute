@@ -415,7 +415,11 @@ export default function AppearanceTab() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
+                <label htmlFor="provider-quota-refresh-interval" className="sr-only">
+                  {getSettingsLabel("providerQuotaAutoRefreshInterval", "Refresh interval")}
+                </label>
                 <input
+                  id="provider-quota-refresh-interval"
                   type="number"
                   min={10}
                   max={3600}
@@ -488,13 +492,18 @@ export default function AppearanceTab() {
               className="h-10 w-12 rounded border border-border bg-surface cursor-pointer"
               aria-label={t("themeCustom")}
             />
+            <label htmlFor="custom-theme-color-text" className="sr-only">
+              {t("themeCustom")}
+            </label>
             <input
+              id="custom-theme-color-text"
               type="text"
               value={customThemeColor}
               onChange={(e) => setCustomThemeColor(e.target.value)}
               placeholder="#3b82f6"
               maxLength={7}
               className={`flex-1 h-10 px-3 rounded-lg bg-surface border text-sm text-text-main focus:outline-none ${isValidHex ? "border-border focus:border-primary" : "border-red-400 focus:border-red-500"}`}
+              aria-invalid={!isValidHex}
             />
             <Button onClick={() => setCustomColorTheme(customThemeColor)} disabled={!isValidHex}>
               {t("themeCreate")}

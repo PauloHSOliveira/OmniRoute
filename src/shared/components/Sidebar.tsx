@@ -115,7 +115,6 @@ export default function Sidebar({
     const accent = getSidebarIconAccent(itemId);
     return {
       "--sidebar-icon-accent": accent,
-      color: accent,
     };
   };
   const pathname = usePathname();
@@ -450,23 +449,23 @@ export default function Sidebar({
       "flex items-center gap-3 rounded-lg transition-all group",
       collapsed ? "justify-center px-2 py-2.5" : "px-3 py-1.5",
       active
-        ? "bg-primary/10 text-primary"
-        : "text-text-muted hover:bg-surface/50 hover:text-text-main"
+        ? "bg-accent/10 text-text-main"
+        : "text-text-muted hover:bg-bg-subtle hover:text-text-main"
     );
     const iconClassName = cn(
       "material-symbols-outlined text-[18px] shrink-0",
-      active ? "fill-1" : "group-hover:text-primary transition-colors"
+      active ? "fill-1 text-primary" : "group-hover:text-text-main transition-colors"
     );
     const content = (
       <>
-        <span className={iconClassName} style={getIconStyle(item.id)}>
+        <span className={iconClassName} style={getIconStyle(item.id)} aria-hidden="true">
           {item.icon}
         </span>
         {!collapsed && (
           <div className="flex min-w-0 flex-col">
             <span className="truncate text-sm font-medium">{item.label}</span>
             {item.subtitle && (
-              <span className="truncate text-[10px] text-text-muted/60">{item.subtitle}</span>
+              <span className="truncate text-[11px] text-text-muted/70">{item.subtitle}</span>
             )}
           </div>
         )}
@@ -512,7 +511,7 @@ export default function Sidebar({
       <aside
         ref={sidebarRef}
         className={cn(
-          "flex h-full min-h-0 flex-col border-r border-black/5 bg-sidebar transition-all duration-300 ease-in-out dark:border-white/5",
+          "flex h-full min-h-0 flex-col border-r border-border bg-sidebar transition-all duration-300 ease-in-out",
           collapsed ? "w-16" : "w-[220px]"
         )}
         style={{ paddingTop: isMacElectron ? "var(--desktop-safe-top)" : undefined }}
@@ -535,9 +534,9 @@ export default function Sidebar({
           >
             {!isMacElectron && (
               <>
-                <div className="w-3 h-3 rounded-full bg-[#FF5F56]" />
-                <div className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
-                <div className="w-3 h-3 rounded-full bg-[#27C93F]" />
+                <div className="w-2 h-2 rounded-full bg-text-muted/35" />
+                <div className="w-2 h-2 rounded-full bg-text-muted/35" />
+                <div className="w-2 h-2 rounded-full bg-text-muted/35" />
               </>
             )}
             {!collapsed && <div className="flex-1" />}
@@ -567,7 +566,7 @@ export default function Sidebar({
             prefetch={false}
             className={cn("flex items-center", collapsed ? "justify-center" : "gap-2.5")}
           >
-            <div className="flex items-center justify-center size-8 rounded bg-linear-to-br from-[#E54D5E] to-[#C93D4E] shrink-0">
+            <div className="flex items-center justify-center size-8 rounded-control bg-primary shrink-0">
               {customLogo ? (
                 <img
                   src={customLogo}
@@ -627,9 +626,7 @@ export default function Sidebar({
             if (collapsed) {
               return (
                 <div key={section.id}>
-                  {!isFirst && (
-                    <div className="border-t border-black/5 dark:border-white/5 my-1.5" />
-                  )}
+                  {!isFirst && <div className="border-t border-border my-1.5" />}
                   {sectionItems.map(renderNavLink)}
                 </div>
               );
@@ -648,7 +645,7 @@ export default function Sidebar({
             return (
               <div key={section.id} className={isFirst ? "space-y-0.5" : "mt-2"}>
                 <div
-                  className="flex items-center gap-0.5 px-2 py-1 rounded-md hover:bg-surface/30 transition-colors cursor-pointer group/header"
+                  className="flex items-center gap-0.5 px-2 py-1 rounded-md hover:bg-bg-subtle/70 transition-colors cursor-pointer group/header"
                   onClick={() => toggleSection(sectionId)}
                   role="button"
                   aria-expanded={isExpanded}
@@ -702,7 +699,7 @@ export default function Sidebar({
                           <div key={child.id} className={separatorHidden ? "mt-0.5" : "mt-2"}>
                             {!separatorHidden && (
                               <div className="flex items-center gap-1.5 px-2 py-0.5 mb-0.5">
-                                <div className="h-px flex-1 bg-black/8 dark:bg-white/8" />
+                                <div className="h-px flex-1 bg-border" />
                                 <span className="text-[8px] font-semibold text-text-muted/40 uppercase tracking-widest">
                                   {child.title}
                                 </span>
@@ -725,7 +722,7 @@ export default function Sidebar({
 
         <div
           className={cn(
-            "shrink-0 border-t border-black/5 dark:border-white/5",
+            "shrink-0 border-t border-border",
             collapsed ? "p-2 flex flex-col gap-1" : "p-2 flex gap-2"
           )}
           style={{

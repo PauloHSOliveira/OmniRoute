@@ -15,12 +15,12 @@ export default function Textarea({ className, error = false, ...props }: Textare
     <textarea
       className={cn(
         "w-full py-2 px-3 text-sm text-text-main",
-        "bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-control",
-        "placeholder-text-muted/60",
-        "focus:ring-1 focus:ring-accent/30 focus:border-accent/50 focus:outline-none",
-        "transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+        "bg-white dark:bg-white/5 border border-border rounded-control",
+        "placeholder:text-text-muted/60",
+        "focus:ring-2 focus:ring-accent/20 focus:border-accent/60 focus:outline-none",
+        "transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
         "text-[16px] sm:text-sm",
-        error ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "",
+        error ? "border-red-600 focus:border-red-600 focus:ring-red-600/20" : "",
         className
       )}
       {...props}

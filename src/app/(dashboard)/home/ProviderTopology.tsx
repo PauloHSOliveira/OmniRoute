@@ -59,7 +59,7 @@ function ProviderNode({ data }: { data: ProviderNodeData }) {
 
   return (
     <div
-      className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border-2 transition-all duration-300 bg-bg cursor-pointer hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
+      className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border-2 transition-[border-color,box-shadow] duration-300 bg-bg cursor-pointer shadow-sm hover:shadow-md"
       style={{
         borderColor: error ? RED : active ? color : healthy ? GREEN : "var(--color-border)",
         boxShadow: error

@@ -143,12 +143,15 @@ export default function ThinkingBudgetTab() {
       {config.mode === "custom" && (
         <div className="p-4 rounded-lg bg-surface/30 border border-border/30 mb-4">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-sm font-medium">{t("tokenBudget")}</p>
+            <label htmlFor="thinking-token-budget" className="text-sm font-medium">
+              {t("tokenBudget")}
+            </label>
             <span className="text-sm font-mono tabular-nums text-violet-400">
               {config.customBudget.toLocaleString()} {t("tokens")}
             </span>
           </div>
           <input
+            id="thinking-token-budget"
             type="range"
             min="0"
             max="131072"
@@ -156,8 +159,12 @@ export default function ThinkingBudgetTab() {
             value={config.customBudget}
             onChange={(e) => save({ customBudget: parseInt(e.target.value) })}
             className="w-full accent-violet-500"
+            aria-describedby="thinking-token-budget-scale"
           />
-          <div className="flex justify-between text-xs text-text-muted mt-1">
+          <div
+            id="thinking-token-budget-scale"
+            className="flex justify-between text-xs text-text-muted mt-1"
+          >
             <span>{t("off")}</span>
             <span>1K</span>
             <span>10K</span>

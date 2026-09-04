@@ -795,7 +795,7 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
       {/* Update Progress Overlay */}
       {showUpdateOverlay && (
         <div className="fixed inset-0 z-[999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-bg-main border border-border rounded-2xl shadow-2xl max-w-md w-full p-6">
+          <div className="bg-surface border border-border rounded-card shadow-elevated max-w-md w-full p-6">
             <div className="flex items-center gap-3 mb-5">
               <span className="material-symbols-outlined text-primary text-[28px] animate-spin">
                 progress_activity
@@ -829,9 +829,9 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
                       s.status === "running"
                         ? "border-primary/40 bg-primary/5"
                         : s.status === "done"
-                          ? "border-green-500/30 bg-green-500/5"
+                          ? "border-success/30 bg-success/5"
                           : s.status === "failed"
-                            ? "border-red-500/30 bg-red-500/5"
+                            ? "border-error/30 bg-error/5"
                             : "border-border bg-bg-subtle"
                     }`}
                   >
@@ -840,15 +840,15 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
                         progress_activity
                       </span>
                     ) : s.status === "done" ? (
-                      <span className="material-symbols-outlined text-green-500 text-[18px]">
+                      <span className="material-symbols-outlined text-success text-[18px]">
                         check_circle
                       </span>
                     ) : s.status === "failed" ? (
-                      <span className="material-symbols-outlined text-red-500 text-[18px]">
+                      <span className="material-symbols-outlined text-error text-[18px]">
                         error
                       </span>
                     ) : (
-                      <span className="material-symbols-outlined text-amber-500 text-[18px]">
+                      <span className="material-symbols-outlined text-warning text-[18px]">
                         warning
                       </span>
                     )}
@@ -909,7 +909,7 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
       {/* Update Notification Banner */}
       {versionInfo?.updateAvailable && !showUpdateOverlay && (
         <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-3 rounded-lg border border-primary/20 bg-primary/10 px-5 py-4 text-primary">
+          <div className="flex flex-col gap-3 rounded-control border border-primary/20 bg-primary/5 px-5 py-4 text-primary">
             <div className="flex min-h-[48px] items-center justify-between">
               <div className="flex min-w-0 items-center gap-4">
                 <span className="material-symbols-outlined shrink-0 text-[24px]">
@@ -1061,8 +1061,8 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
             </div>
 
             <ol className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-              <li className="rounded-lg border border-border bg-bg-subtle p-4 flex gap-3">
-                <div className="flex items-center justify-center size-8 rounded-lg bg-primary/10 text-primary shrink-0">
+              <li className="rounded-control border border-border bg-bg-subtle p-4 flex gap-3">
+                <div className="flex items-center justify-center size-8 rounded-control bg-surface border border-border text-primary shrink-0">
                   <span className="material-symbols-outlined text-[18px]">key</span>
                 </div>
                 <div>

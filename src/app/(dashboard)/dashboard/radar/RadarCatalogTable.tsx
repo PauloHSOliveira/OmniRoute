@@ -103,7 +103,7 @@ function capabilityBadge(label: string, value: boolean | null | undefined, trueC
       ? trueClass
       : value === false
         ? "bg-red-500/10 text-red-400"
-        : "bg-gray-500/10 text-gray-400";
+        : "bg-gray-600/10 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400";
   return (
     <span className={`text-[10px] px-1.5 py-0.5 rounded ${stateClass}`}>
       {label} {state}
@@ -314,7 +314,7 @@ export function RadarCatalogTable({ entries, refreshCatalog, onError }: RadarCat
                               ? "bg-yellow-500/10 text-yellow-400"
                               : entry.tos === "avoid"
                                 ? "bg-red-500/10 text-red-400"
-                                : "bg-gray-500/10 text-gray-400"
+                                : "bg-gray-600/10 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400"
                         }`}
                       >
                         {entry.tos}

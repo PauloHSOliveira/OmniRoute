@@ -3,14 +3,14 @@
 import { cn } from "@/shared/utils/cn";
 
 const variants = {
-  primary: "bg-[image:var(--grad-brand)] text-white shadow-sm hover:brightness-105",
+  primary: "bg-primary text-white shadow-sm hover:bg-primary-hover",
   accent: "bg-accent text-white shadow-sm hover:bg-accent-hover",
   secondary:
-    "bg-white dark:bg-white/10 border border-black/10 dark:border-white/10 text-text-main hover:bg-black/5 dark:hover:bg-white/5",
-  outline: "border border-black/15 dark:border-white/15 text-text-main hover:bg-black/5",
+    "bg-white dark:bg-white/10 border border-border text-text-main hover:bg-black/5 dark:hover:bg-white/5",
+  outline: "border border-border-strong text-text-main hover:bg-black/5",
   ghost: "text-text-muted hover:bg-black/5 dark:hover:bg-white/5 hover:text-text-main",
-  warning: "bg-amber-500 text-white hover:bg-amber-600 shadow-sm",
-  danger: "bg-red-500 text-white hover:bg-red-600 shadow-sm",
+  warning: "bg-warning text-white hover:bg-warning/90 shadow-sm",
+  danger: "bg-error text-white hover:bg-error/90 shadow-sm",
 };
 
 export type ButtonVariant = keyof typeof variants;
@@ -48,7 +48,7 @@ export default function Button({
     <button
       type="button"
       className={cn(
-        "inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 cursor-pointer",
+        "inline-flex items-center justify-center gap-2 font-medium transition-colors duration-200 cursor-pointer",
         "active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100",
         variants[variant],
         sizes[size],

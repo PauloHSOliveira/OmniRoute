@@ -567,7 +567,7 @@ export default function TokensPage() {
                             ? "bg-emerald-500/10 text-emerald-400"
                             : server.status === "error"
                               ? "bg-red-500/10 text-red-400"
-                              : "bg-gray-500/10 text-gray-400"
+                              : "bg-gray-600/10 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400"
                         }`}
                       >
                         {t.has(`tokensServerStatus.${server.status}`)

@@ -158,7 +158,11 @@ export function buildNodeRuntimeArgs(env = process.env, memoryLimit, serverPath)
  *        Defaults to process.env. Pass bootstrap `merged` so project `.env` PORT applies before spawn.
  */
 export function resolveRuntimePorts(fromEnv = process.env) {
-  const basePort = parsePort(fromEnv.PORT || "20128", 20128);
+  const defaultPort = fromEnv.NODE_ENV === "development" ? 21128 : 20128;
+  const basePort = parsePort(
+    fromEnv.PORT || (fromEnv.NODE_ENV === "development" ? fromEnv.OMNIROUTE_DEV_PORT : undefined) || String(defaultPort),
+    defaultPort
+  );
   const apiPort = parsePort(fromEnv.API_PORT || String(basePort), basePort);
   const dashboardPort = parsePort(fromEnv.DASHBOARD_PORT || String(basePort), basePort);
 
