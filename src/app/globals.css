@@ -48,6 +48,13 @@
   --color-traffic-yellow: #d97706;
   --color-traffic-green: #16a34a;
 
+  /* Orchestration status tokens — light values (AA sobre fundo claro) */
+  --orch-status-success: #15803d;
+  --orch-status-warning: #b45309;
+  --orch-status-error: #b91c1c;
+  --orch-status-muted: #6b7280;
+  --orch-status-approval: #6d28d9;
+
   --color-bg: #ffffff;
   --color-bg-alt: #f7f7f7;
   --color-bg-primary: #ffffff;
@@ -127,6 +134,13 @@
   --color-text-placeholder: #9ca3af;
   --color-text-disabled: #6b7280;
   --color-link: #93c5fd;
+
+  /* Orchestration status tokens — dark values (previous STATUS_HEX constants) */
+  --orch-status-success: #22c55e;
+  --orch-status-warning: #f59e0b;
+  --orch-status-error: #ef4444;
+  --orch-status-muted: #6b7280;
+  --orch-status-approval: #8b5cf6;
 
   /* Fumadocs theme mapping */
   --color-fd-background: #111111;
@@ -818,5 +832,8 @@ html[dir="rtl"] :where(.material-symbols-outlined, .traffic-lights, .react-flow)
   .orchestration-canvas .react-flow__edge.animated path {
     animation: none;
     stroke-dasharray: none;
+  }
+  .orchestration-canvas .orch-edge-particle {
+    display: none;
   }
 }
