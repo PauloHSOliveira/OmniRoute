@@ -15,6 +15,7 @@ process.env.DATA_DIR = TEST_DATA_DIR;
 
 const core = await import("../../src/lib/db/core.ts");
 const store = await import("../../src/lib/db/responsesContinuationStore.ts");
+const callLogs = await import("../../src/lib/usage/callLogs.ts");
 
 test.after(() => {
   core.resetDbInstance();
@@ -27,13 +28,15 @@ function insertCallLog(row: {
   apiKeyId: string | null;
   detailState: string;
   artifactRelPath: string | null;
+  videoContentRemoved?: 0 | 1;
 }) {
   const db = core.getDbInstance();
   db.prepare(
     `INSERT INTO call_logs
       (id, timestamp, method, path, status, model, provider, account, duration,
-       tokens_in, tokens_out, api_key_id, detail_state, artifact_relpath, response_id)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       tokens_in, tokens_out, api_key_id, detail_state, artifact_relpath, response_id,
+       video_content_removed)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).run(
     row.id,
     new Date().toISOString(),
@@ -49,7 +52,8 @@ function insertCallLog(row: {
     row.apiKeyId,
     row.detailState,
     row.artifactRelPath,
-    row.responseId
+    row.responseId,
+    row.videoContentRemoved ?? 0
   );
 }
 
@@ -125,6 +129,85 @@ test("resolvePreviousResponseState reads output from a wrapped (streaming) clien
   });
 
   const result = store.resolvePreviousResponseState("resp_streamed", "key-1");
+  assert.deepEqual(result, {
+    input: [{ type: "message", role: "user", content: "hi" }],
+    output: [{ type: "message", role: "assistant", content: "hello" }],
+  });
+});
+
+test("resolvePreviousResponseState chains off effectiveInput, not the pre-reconstruction clientRawRequest.body", () => {
+  // Live incident (2026-09-03): clientRawRequest.body is deliberately captured
+  // BEFORE chat.ts's own previous_response_id reconstruction runs
+  // (captureDeferredClientRawBody's whole point -- it must reflect the raw
+  // client bytes for audit/guardrail purposes, not what OmniRoute rewrote the
+  // request into). For a turn that was ITSELF a continuation, body.input is
+  // just the client's own trimmed delta -- a handful of tool-call items with
+  // no leading system/user message. Chaining a LATER continuation off that
+  // instead of the request's real effective input compounds into a
+  // progressively truncated reconstruction, which the upstream provider then
+  // rejects outright ("Please ensure that function call turn comes
+  // immediately after a user turn..."). effectiveInput is captured AFTER
+  // reconstruction and must be what this function chains off.
+  insertCallLog({
+    id: "log-continued-turn",
+    responseId: "resp_continued",
+    apiKeyId: "key-1",
+    detailState: "ready",
+    artifactRelPath: "2026-01-01/log-continued-turn.json",
+  });
+  writeArtifact("2026-01-01/log-continued-turn.json", {
+    clientRawRequest: {
+      // What the client actually sent this turn: just the new delta, relying
+      // on OmniRoute to have reconstructed full history server-side.
+      body: {
+        input: [{ type: "function_call_output", call_id: "call_1", output: "42" }],
+      },
+      // What this request ACTUALLY dispatched with, after chat.ts's own
+      // reconstruction expanded the prior turn's stored input+output back in.
+      effectiveInput: [
+        { type: "message", role: "user", content: "hi" },
+        { type: "message", role: "assistant", content: "calling a tool" },
+        { type: "function_call", call_id: "call_1", name: "get_answer", arguments: "{}" },
+        { type: "function_call_output", call_id: "call_1", output: "42" },
+      ],
+    },
+    providerRequest: { body: { input: [] } },
+    clientResponse: {
+      id: "resp_continued",
+      output: [{ type: "message", role: "assistant", content: "the answer is 42" }],
+    },
+  });
+
+  const result = store.resolvePreviousResponseState("resp_continued", "key-1");
+  assert.deepEqual(result, {
+    input: [
+      { type: "message", role: "user", content: "hi" },
+      { type: "message", role: "assistant", content: "calling a tool" },
+      { type: "function_call", call_id: "call_1", name: "get_answer", arguments: "{}" },
+      { type: "function_call_output", call_id: "call_1", output: "42" },
+    ],
+    output: [{ type: "message", role: "assistant", content: "the answer is 42" }],
+  });
+});
+
+test("resolvePreviousResponseState falls back to clientRawRequest.body.input when effectiveInput is absent (pre-fix artifacts)", () => {
+  insertCallLog({
+    id: "log-legacy-no-effective-input",
+    responseId: "resp_legacy",
+    apiKeyId: "key-1",
+    detailState: "ready",
+    artifactRelPath: "2026-01-01/log-legacy-no-effective-input.json",
+  });
+  writeArtifact("2026-01-01/log-legacy-no-effective-input.json", {
+    clientRawRequest: { body: { input: [{ type: "message", role: "user", content: "hi" }] } },
+    providerRequest: { body: { input: [{ type: "message", role: "user", content: "hi" }] } },
+    clientResponse: {
+      id: "resp_legacy",
+      output: [{ type: "message", role: "assistant", content: "hello" }],
+    },
+  });
+
+  const result = store.resolvePreviousResponseState("resp_legacy", "key-1");
   assert.deepEqual(result, {
     input: [{ type: "message", role: "user", content: "hi" }],
     output: [{ type: "message", role: "assistant", content: "hello" }],
@@ -261,6 +344,123 @@ test("resolvePreviousResponseState fails closed when the stored input array was 
   assert.equal(store.resolvePreviousResponseState("resp_gen-truncated-history", "key-1"), null);
 });
 
+test("resolvePreviousResponseState fails closed when the streaming collector truncated the response", () => {
+  // Live incident (2026-09-02): a huge/reasoning-heavy response blew past
+  // createStructuredSSECollector's own event-count cap mid-stream. The
+  // stored clientResponse then carries `_truncated: true` and
+  // `summary.status: "in_progress"` (never reached "completed") with a
+  // genuinely empty `summary.output` -- not a bounded array with an
+  // `_omniroute_truncated_array` sentinel (that only covers an array capped
+  // mid-array, not a collector that stopped before populating output at
+  // all). The empty array previously passed every check here and got
+  // merged into the next turn's request as this response's entire
+  // contribution -- reconstructing to zero real messages, which the
+  // upstream provider then rejected outright ("Input required: specify
+  // prompt or messages"), breaking the conversation. Measured live: ~22%
+  // of a sample of recent successful Ping responses carried this flag.
+  insertCallLog({
+    id: "log-8",
+    responseId: "resp_gen-collector-truncated",
+    apiKeyId: "key-1",
+    detailState: "ready",
+    artifactRelPath: "2026-01-01/log-8.json",
+  });
+  writeArtifact("2026-01-01/log-8.json", {
+    clientRawRequest: { body: { input: [{ type: "message", role: "user", content: "hi" }] } },
+    providerRequest: { body: { input: [{ type: "message", role: "user", content: "hi" }] } },
+    clientResponse: {
+      _streamed: true,
+      _truncated: true,
+      _droppedEvents: 24,
+      summary: { id: "resp_gen-collector-truncated", status: "in_progress", output: [] },
+    },
+  });
+
+  assert.equal(store.resolvePreviousResponseState("resp_gen-collector-truncated", "key-1"), null);
+});
+
+test("resolvePreviousResponseState fails closed on an empty output array even without the _truncated flag", () => {
+  // Belt-and-suspenders for the same failure class when the collector
+  // truncated without ever setting `_truncated` (or for a non-streaming
+  // response that somehow logged zero output items): a response the
+  // client actually received as real/successful always has at least one
+  // output item, so an empty array here is never a legitimate prior turn
+  // to reconstruct from.
+  insertCallLog({
+    id: "log-9",
+    responseId: "resp_gen-empty-output",
+    apiKeyId: "key-1",
+    detailState: "ready",
+    artifactRelPath: "2026-01-01/log-9.json",
+  });
+  writeArtifact("2026-01-01/log-9.json", {
+    clientRawRequest: { body: { input: [{ type: "message", role: "user", content: "hi" }] } },
+    providerRequest: { body: { input: [{ type: "message", role: "user", content: "hi" }] } },
+    clientResponse: { id: "resp_gen-empty-output", output: [] },
+  });
+
+  assert.equal(store.resolvePreviousResponseState("resp_gen-empty-output", "key-1"), null);
+});
+
+test("resolvePreviousResponseState fails closed when the row had video content removed (#12150 P2)", () => {
+  // #12150 P2 surface 2: the persisted clientRawRequest snapshot had its video
+  // transcript cues structurally redacted to [redacted-video-transcript] before
+  // storage (videoBridgeSnapshotRedaction). The stored input therefore no longer
+  // carries the client's real cue text -- reconstructing a continuation off it
+  // would forward the placeholder upstream as if it were genuine history. When the
+  // owning row is marked video_content_removed=1 this must fail closed (return
+  // null) so the client resends full history, exactly like previous_response_not_found,
+  // even though the artifact itself is otherwise a perfectly resolvable 'ready' row.
+  insertCallLog({
+    id: "log-video-removed",
+    responseId: "resp_video_removed",
+    apiKeyId: "key-1",
+    detailState: "ready",
+    artifactRelPath: "2026-01-01/log-video-removed.json",
+    videoContentRemoved: 1,
+  });
+  writeArtifact("2026-01-01/log-video-removed.json", {
+    clientRawRequest: {
+      body: {
+        input: [{ type: "message", role: "user", content: "[redacted-video-transcript]" }],
+      },
+    },
+    providerRequest: { body: { input: [] } },
+    clientResponse: {
+      id: "resp_video_removed",
+      output: [{ type: "message", role: "assistant", content: "hello" }],
+    },
+  });
+
+  assert.equal(store.resolvePreviousResponseState("resp_video_removed", "key-1"), null);
+});
+
+test("resolvePreviousResponseState still resolves a normal row (video_content_removed=0)", () => {
+  // Guard the fail-closed above does not over-fire: an ordinary row (the default
+  // 0) resolves exactly as before.
+  insertCallLog({
+    id: "log-video-notremoved",
+    responseId: "resp_video_notremoved",
+    apiKeyId: "key-1",
+    detailState: "ready",
+    artifactRelPath: "2026-01-01/log-video-notremoved.json",
+    videoContentRemoved: 0,
+  });
+  writeArtifact("2026-01-01/log-video-notremoved.json", {
+    clientRawRequest: { body: { input: [{ type: "message", role: "user", content: "hi" }] } },
+    providerRequest: { body: { input: [{ type: "message", role: "user", content: "hi" }] } },
+    clientResponse: {
+      id: "resp_video_notremoved",
+      output: [{ type: "message", role: "assistant", content: "hello" }],
+    },
+  });
+
+  assert.deepEqual(store.resolvePreviousResponseState("resp_video_notremoved", "key-1"), {
+    input: [{ type: "message", role: "user", content: "hi" }],
+    output: [{ type: "message", role: "assistant", content: "hello" }],
+  });
+});
+
 test("resolvePreviousResponseState returns null when detail logging was never captured for this row", () => {
   insertCallLog({
     id: "log-5",
@@ -271,4 +471,134 @@ test("resolvePreviousResponseState returns null when detail logging was never ca
   });
 
   assert.equal(store.resolvePreviousResponseState("resp_no_detail", "key-1"), null);
+});
+
+// Proven live in production (2026-09-06, nvidia/nemotron-3.5-lightning:free via
+// OpenRouter): a client that fires its next turn immediately after receiving a
+// response id -- normal behavior in a tight tool-calling loop -- can reach
+// resolvePreviousResponseState before saveCallLog's own artifact write (queued,
+// see writeCallArtifactAsync) has landed and flipped detail_state to "ready".
+// Before the pending-continuation bridge, OmniRoute answered a well-formed 400
+// previous_response_not_found for an id it minted seconds earlier; the wire
+// capture showed the client recovering by resending full history, exactly like
+// a real OpenAI-issued rejection -- but every one of those resends was an
+// avoidable full-history resend, not a genuine unknown id. This exercises the
+// real saveCallLog pipeline end to end, not a pre-inserted "ready" row.
+test("resolvePreviousResponseState resolves via the pending bridge while saveCallLog's artifact write is still queued", async () => {
+  const save = callLogs.saveCallLog({
+    method: "POST",
+    path: "/v1/responses",
+    status: 200,
+    model: "nvidia/nemotron-3.5-lightning:free",
+    provider: "openrouter",
+    apiKeyId: "key-1",
+    duration: 8169,
+    responseId: "resp_gen-race-abc123",
+    requestBody: { input: [{ type: "message", role: "user", content: "hi" }], store: true },
+    responseBody: { id: "resp_gen-race-abc123" },
+    pipeline: {
+      clientRawRequest: { body: { input: [{ type: "message", role: "user", content: "hi" }] } },
+      clientResponse: {
+        id: "resp_gen-race-abc123",
+        output: [{ type: "message", role: "assistant", content: "hello" }],
+      },
+    },
+  });
+
+  // The client's next turn can arrive before the queued artifact write below
+  // has even started -- the bridge, seeded synchronously inside saveCallLog
+  // before this call returns, must already answer correctly.
+  assert.deepEqual(store.resolvePreviousResponseState("resp_gen-race-abc123", "key-1"), {
+    input: [{ type: "message", role: "user", content: "hi" }],
+    output: [{ type: "message", role: "assistant", content: "hello" }],
+  });
+
+  await save;
+
+  // Once the durable row lands, the same id must still resolve -- now from
+  // call_logs/the artifact, with the bridge entry already cleared.
+  assert.deepEqual(store.resolvePreviousResponseState("resp_gen-race-abc123", "key-1"), {
+    input: [{ type: "message", role: "user", content: "hi" }],
+    output: [{ type: "message", role: "assistant", content: "hello" }],
+  });
+});
+
+test("resolvePreviousResponseState never lets the pending bridge cross tenants", async () => {
+  const save = callLogs.saveCallLog({
+    method: "POST",
+    path: "/v1/responses",
+    status: 200,
+    model: "nvidia/nemotron-3.5-lightning:free",
+    provider: "openrouter",
+    apiKeyId: "key-a",
+    duration: 4000,
+    responseId: "resp_gen-tenant-bridge",
+    pipeline: {
+      clientRawRequest: { body: { input: [{ role: "user", content: "secret" }] } },
+      clientResponse: { id: "resp_gen-tenant-bridge", output: [{ role: "assistant", content: "reply" }] },
+    },
+  });
+
+  assert.equal(store.resolvePreviousResponseState("resp_gen-tenant-bridge", "key-b"), null);
+  assert.equal(store.resolvePreviousResponseState("resp_gen-tenant-bridge", null), null);
+  assert.notEqual(store.resolvePreviousResponseState("resp_gen-tenant-bridge", "key-a"), null);
+
+  await save;
+});
+
+test("resolvePreviousResponseState does not bridge a response id that saveCallLog never seeded (no-log or no pipeline)", async () => {
+  // noLog: the entry is redacted before it would ever reach the bridge.
+  await callLogs.saveCallLog({
+    method: "POST",
+    path: "/v1/responses",
+    status: 200,
+    model: "gpt-5.4-pro",
+    provider: "openai",
+    apiKeyId: "key-1",
+    noLog: true,
+    responseId: "resp_gen-nolog",
+    pipeline: {
+      clientRawRequest: { body: { input: [{ role: "user", content: "hi" }] } },
+      clientResponse: { id: "resp_gen-nolog", output: [{ role: "assistant", content: "hi" }] },
+    },
+  });
+  assert.equal(store.resolvePreviousResponseState("resp_gen-nolog", "key-1"), null);
+
+  // No pipeline payload at all -- nothing to reconstruct from.
+  await callLogs.saveCallLog({
+    method: "POST",
+    path: "/v1/responses",
+    status: 200,
+    model: "gpt-5.4-pro",
+    provider: "openai",
+    apiKeyId: "key-1",
+    responseId: "resp_gen-no-pipeline",
+  });
+  assert.equal(store.resolvePreviousResponseState("resp_gen-no-pipeline", "key-1"), null);
+});
+
+test("the pending bridge shares the durable path's fail-closed rules (video-redacted turns never bridge)", async () => {
+  const save = callLogs.saveCallLog({
+    method: "POST",
+    path: "/v1/responses",
+    status: 200,
+    model: "gpt-5.4-pro",
+    provider: "openai",
+    apiKeyId: "key-1",
+    duration: 100,
+    responseId: "resp_gen-video-bridge",
+    videoContentRemoved: true,
+    pipeline: {
+      clientRawRequest: { body: { input: [{ role: "user", content: "[redacted-video-transcript]" }] } },
+      clientResponse: { id: "resp_gen-video-bridge", output: [{ role: "assistant", content: "ok" }] },
+    },
+  });
+
+  // Even mid-flight (bridge-only, durable row not yet written), a
+  // video-redacted turn must fail closed exactly like the durable path does.
+  assert.equal(store.resolvePreviousResponseState("resp_gen-video-bridge", "key-1"), null);
+
+  await save;
+
+  assert.equal(store.resolvePreviousResponseState("resp_gen-video-bridge", "key-1"), null);
 });

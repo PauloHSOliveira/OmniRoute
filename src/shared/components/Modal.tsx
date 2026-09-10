@@ -249,7 +249,7 @@ export function ConfirmModal({
           <Button variant="ghost" onClick={onClose} disabled={loading}>
             {resolvedCancelText}
           </Button>
-          <Button variant={variant} onClick={onConfirm} loading={loading}>
+          <Button variant={variant} onClick={() => void onConfirm()} loading={loading}>
             {resolvedConfirmText}
           </Button>
         </>

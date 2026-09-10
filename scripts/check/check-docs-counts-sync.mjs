@@ -185,6 +185,9 @@ export function tallyDrift(checks, getContent) {
 function readCodeFacts() {
   const script = [
     'import {computeFreeModelTotals,FREE_MODEL_BUDGETS} from "./open-sse/config/freeModelCatalog.ts";',
+    'import {FREE_TIER_PROVIDER_SET} from "./open-sse/config/freeTierProviders.ts";',
+    'import {generateProviderPluginManifest} from "./open-sse/config/providerPluginManifestRegistry.ts";',
+    'import {REGISTRY} from "./open-sse/config/providers/index.ts";',
     'import {MODE_PACKS} from "./open-sse/services/autoCombo/modePacks.ts";',
     'import {ENGINE_IDS} from "./open-sse/services/compression/engineCatalog.ts";',
     'import {CLI_TOOLS} from "./src/shared/constants/cliTools.ts";',
@@ -218,17 +221,24 @@ function readCodeFacts() {
     "const t=computeFreeModelTotals();const cli=Object.values(CLI_TOOLS);",
     "const by=(c)=>cli.filter(x=>x.category===c).length;",
     // "Free forever" = every provider whose free access renews or needs no key at all.
-    // one-time-initial (signup credits) and discontinued pools are excluded on purpose.
+    // one-time-initial (signup credits) and discontinued pools are excluded on purpose,
+    // and so is every eligibility-gated row: a provider nobody can sign up for without
+    // clearing a gate is not "free forever" for the reader of the headline.
     "const FOREVER=new Set(['recurring-monthly','recurring-daily','recurring-uncapped',",
     "'recurring-credit','keyless']);",
-    "const ff=new Set();for(const m of t.perModel)if(FOREVER.has(m.freeType))ff.add(m.provider);",
+    "const ff=new Set();for(const m of t.perModel)",
+    "if(FOREVER.has(m.freeType)&&!m.eligibilityGate)ff.add(m.provider);",
     'console.log("@@"+JSON.stringify({freeSteady:t.steadyRecurringTokens,entries:t.perModel.length,',
-    "freeFirst:t.firstMonthRealisticTokens,freePools:t.poolCount,engines:ENGINE_IDS.length,",
+    "freeFirst:t.firstMonthRealisticTokens,freeGated:t.gatedRecurringTokens,",
+    "freePools:t.poolCount,engines:ENGINE_IDS.length,",
     "cliTotal:cli.length,cliCode:by('code'),cliAgent:by('agent'),",
     "mcpTools:countUniqueMcpTools(cols),mcpScopes:sc.size,providers:pids.size,freeForever:ff.size,",
     "modePacks:Object.keys(MODE_PACKS),",
     "hardStop:FREE_MODEL_BUDGETS.filter(e=>e.hardStopGuaranteed===true).length,",
-    "trainsOnPrompts:FREE_MODEL_BUDGETS.filter(e=>e.trainsOnPrompts===true).length}));",
+    "trainsOnPrompts:FREE_MODEL_BUDGETS.filter(e=>e.trainsOnPrompts===true).length,",
+    "freeTierCount:FREE_TIER_PROVIDER_SET.size,",
+    "freeTierReg:FREE_TIER_PROVIDER_SET.size-[...FREE_TIER_PROVIDER_SET].filter(x=>!(x in REGISTRY)).length,",
+    'manifestFreeTier:generateProviderPluginManifest().providers.filter(p=>p.capabilities.includes("free-tier")).length}));',
   ].join("");
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "docs-counts-"));
   try {
@@ -271,6 +281,20 @@ export function extractHeadlineClaims(content) {
   return claims;
 }
 
+// The eligibility-gated figure ("+~6M behind regional identity verification") is validated
+// with its own anchor so it can neither drift nor be silently dropped once it exists.
+const GATED_ANCHOR = /^\s*behind regional identity verification/i;
+
+export function extractGatedClaims(content) {
+  const claims = [];
+  for (const m of content.matchAll(/\+?~?(\d+(?:\.\d+)?)([BM])\b/g)) {
+    const after = content.slice(m.index + m[0].length, m.index + m[0].length + 60);
+    if (!GATED_ANCHOR.test(after)) continue;
+    claims.push({ tokens: Number(m[1]) * (m[2] === "B" ? 1e9 : 1e6), unit: m[2], text: m[0] });
+  }
+  return claims;
+}
+
 export function checkFreeTierHeadline(content, totals) {
   const claims = extractHeadlineClaims(content);
   if (!claims.length) return { ok: true, detail: "no aggregate free-tier headline in this file" };
@@ -279,14 +303,31 @@ export function checkFreeTierHeadline(content, totals) {
   const stale = claims.filter(
     (c) => Math.abs(c.value - steady) >= 0.05 && Math.abs(c.value - first) >= 0.05
   );
-  if (!stale.length)
-    return { ok: true, detail: `${claims.length} headline claim(s) match the live catalog` };
-  return {
-    ok: false,
-    detail:
+  const problems = [];
+  if (stale.length) {
+    problems.push(
       `stale headline ${[...new Set(stale.map((c) => c.text))].join(", ")} — live catalog ` +
-      `computes ~${steady.toFixed(2)}B steady / ~${first.toFixed(2)}B first month`,
-  };
+        `computes ~${steady.toFixed(2)}B steady / ~${first.toFixed(2)}B first month`
+    );
+  }
+  if (totals.g != null && totals.g > 0) {
+    const gated = extractGatedClaims(content);
+    const tol = (c) => (c.unit === "B" ? 0.05e9 : 0.5e6);
+    const gatedStale = gated.filter((c) => Math.abs(c.tokens - totals.g) >= tol(c));
+    if (!gated.length) {
+      problems.push(
+        `missing gated figure — live catalog computes ${Math.round(totals.g / 1e6)}M behind regional identity verification`
+      );
+    } else if (gatedStale.length) {
+      problems.push(
+        `stale gated figure ${[...new Set(gatedStale.map((c) => c.text))].join(", ")} — live catalog ` +
+          `computes ${Math.round(totals.g / 1e6)}M behind regional identity verification`
+      );
+    }
+  }
+  if (!problems.length)
+    return { ok: true, detail: `${claims.length} headline claim(s) match the live catalog` };
+  return { ok: false, detail: problems.join("; ") };
 }
 
 // PURE: docs prose that names the product version ("OmniRoute v3.8.50 ·",
@@ -574,12 +615,45 @@ export function buildChecks() {
           validate: makeModePackNamesValidator(packs),
         },
         {
+          // Every pack must pin `quality` explicitly (6 pins, 0.02/0.03) so
+          // no pack silently inherits a future DEFAULT. Validates live code,
+          // not docs — the gate loops `files` content through `validate`.
+          label: "mode packs pin quality explicitly (live code)",
+          actual: 6,
+          docKey: "packs quality pins",
+          strict: true,
+          files: ["open-sse/services/autoCombo/modePacks.ts"],
+          validate: (content) => {
+            const pins = (content.match(/^\s*quality:\s*0\.0\d,?\s*$/gm) ?? []).length;
+            return pins >= 6
+              ? { ok: true, detail: `${pins} quality pins` }
+              : { ok: false, detail: `only ${pins} quality pins — every pack must pin quality` };
+          },
+        },
+        {
           label: "Provider reference total (doc vs live modules)",
           actual: f.providers,
           docKey: "providers (live)",
           strict: true,
           files: ["docs/reference/PROVIDER_REFERENCE.md"],
           validate: makeProviderReferenceValidator(f.providers),
+        },
+        // Gate: manifest emission vs catalogue intersection. Both numbers are
+        // live code facts from the same spawnSync computeur. The catalogue can
+        // name providers the registry does not serve yet (arcee-ai at
+        // 9d1a896c6), so the leaf raw size is informational — the gate
+        // compares the intersected count, never the raw size, and the script
+        // itself always exists so tallyDrift runs validate (skips null only).
+        {
+          label: "Manifest free-tier capability count (live code)",
+          actual: f.manifestFreeTier,
+          docKey: "free-tier capability",
+          strict: true,
+          files: ["scripts/check/check-docs-counts-sync.mjs"],
+          validate: () => ({
+            ok: f.manifestFreeTier === f.freeTierReg,
+            detail: `manifest ${f.manifestFreeTier} vs leaf∩registry ${f.freeTierReg} (leaf ${f.freeTierCount})`,
+          }),
         },
         {
           label: "SVG canonical numbers (live code)",
@@ -599,12 +673,12 @@ export function buildChecks() {
         },
         {
           label: "Free-tier headline (live catalog)",
-          actual: `~${(f.freeSteady / 1e9).toFixed(2)}B steady / ${f.freePools} pools`,
+          actual: `~${(f.freeSteady / 1e9).toFixed(2)}B steady / ${f.freePools} pools / ${Math.round(f.freeGated / 1e6)}M gated`,
           docKey: "free-tier headline",
           strict: true,
           files: ["README.md", "docs/reference/FREE_TIERS.md"],
           validate: (content) =>
-            checkFreeTierHeadline(content, { s: f.freeSteady, m: f.freeFirst }),
+            checkFreeTierHeadline(content, { s: f.freeSteady, m: f.freeFirst, g: f.freeGated }),
         },
         claim(
           f.engines,
