@@ -17,7 +17,6 @@ const ibmPlexSans = IBM_Plex_Sans({
   display: "swap",
   weight: ["400", "500", "600", "700"],
 });
-
 export const viewport: Viewport = {
   themeColor: "#ffffff",
   viewportFit: "cover",
